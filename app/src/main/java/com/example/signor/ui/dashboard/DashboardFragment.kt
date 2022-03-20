@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import com.example.signor.databinding.FragmentDashboardBinding
 import java.lang.Math.PI
 
-
 class DashboardFragment : Fragment() {
     lateinit var Track: AudioTrack
     private var _binding: FragmentDashboardBinding? = null
