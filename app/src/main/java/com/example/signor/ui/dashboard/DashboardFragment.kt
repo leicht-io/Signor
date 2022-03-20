@@ -19,7 +19,6 @@ class DashboardFragment : Fragment() {
     val Fs: Int = 44100
     val buffLength: Int = AudioTrack.getMinBufferSize(Fs, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT)
 
-
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
