@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#171c26"
+    android:orientation="vertical">
+
+  <RelativeLayout
+      android:layout_margin="16dp"
+      android:id="@+id/knobcontainer"
+      android:layout_width="match_parent"
+      android:layout_height="200dp"
+      android:orientation="vertical">
+
+    <com.example.signor.Knob
+        android:layout_centerHorizontal="true"
+        android:id="@+id/knob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:BackgroundColour="?android:attr/colorBackground"
+        app:TextColour="?android:attr/textColorPrimary" />
+
+    <com.example.signor.Scale
+        android:layout_below="@id/knob"
+        android:id="@+id/scale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:BackgroundColour="?android:attr/colorBackground"
+        app:TextColour="?android:attr/textColorPrimary" />
+
+    <com.example.signor.Display
+        android:id="@+id/display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:BackgroundColour="?android:attr/colorBackground"
+        app:TextColour="?android:attr/textColorPrimary" />
+  </RelativeLayout>
+
+  <LinearLayout
+      android:layout_margin="16dp"
+      android:layout_below="@id/knobcontainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/higher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:layout_centerInParent="true"
+        android:id="@+id/lower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fine Adjust" />
+
+    <SeekBar
+        android:id="@+id/fine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Volume" />
+
+    <SeekBar
+        android:id="@+id/level"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+      <Button
+          android:id="@+id/sine"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1.0"
+          android:drawablePadding="8dp"
+          android:text="@string/sin" />
+
+      <Button
+          android:id="@+id/square"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1.0"
+          android:drawablePadding="8dp"
+          android:text="@string/squ" />
+
+      <Button
+          android:id="@+id/sawtooth"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1.0"
+          android:drawablePadding="8dp"
+          android:text="@string/saw" />
+    </LinearLayout>
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_marginBottom="56dp"
+      android:layout_alignParentBottom="true"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      tools:ignore="ButtonStyle">
+    <RelativeLayout
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <ImageButton
+          android:layout_marginRight="16dp"
+          android:background="@drawable/ic_transparent"
+          android:id="@+id/back"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_toLeftOf="@id/previous"
+          tools:ignore="ContentDescription" />
+
+      <ImageButton
+          android:background="@drawable/ic_transparent"
+          android:layout_toLeftOf="@id/mute"
+          android:id="@+id/previous"
+          android:layout_marginRight="24dp"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          tools:ignore="ContentDescription" />
+
+      <ImageButton
+          android:background="@drawable/button_rounded_corner"
+          android:id="@+id/mute"
+          android:scaleType="centerInside"
+          android:layout_centerHorizontal="true"
+          android:layout_width="75dp"
+          android:layout_height="75dp"
+          android:drawablePadding="8dp" />
+
+      <ImageButton
+          android:layout_marginLeft="24dp"
+          android:background="@drawable/ic_transparent"
+          android:id="@+id/next"
+          android:layout_toRightOf="@id/mute"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          tools:ignore="ContentDescription" />
+
+      <ImageButton
+          android:background="@drawable/ic_transparent"
+          android:layout_marginLeft="16dp"
+          android:layout_toRightOf="@id/next"
+          android:id="@+id/forward"
+          android:layout_width="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_height="wrap_content"
+          tools:ignore="ContentDescription" />
+    </RelativeLayout>
+  </LinearLayout>
+</RelativeLayout>
