@@ -30,13 +30,13 @@
         android:layout_weight="1"
         android:text="0.00Hz"
         android:textColor="@color/white"
+        android:textAlignment="viewStart"
         android:id="@+id/frequency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:textAlignment="textEnd"
-        android:layout_weight="1"
+        android:textAlignment="viewEnd"
         android:text="0.00dB"
         android:id="@+id/volume"
         android:textColor="@color/white"
