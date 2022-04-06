@@ -26,10 +26,12 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +45,7 @@ public class Main extends Activity
     private static final int MAX_LEVEL = 100;
     private static final int MAX_FINE = 1000;
 
-    private static final String LOCK = "SigGen:lock";
+    private static final String LOCK = "Signor:lock";
 
     private static final String STATE = "state";
 
@@ -59,10 +61,10 @@ public class Main extends Activity
     public static final String PREF_DUTY = "pref_duty";
 
     private Audio audio;
-
+    private DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private Knob knob;
-    private Scale scale;
-    private Display display;
+    private TextView frequencyDisplay;
+    private TextView volumeDisplay;
 
     private SeekBar fine;
     private SeekBar level;
@@ -87,9 +89,8 @@ public class Main extends Activity
 
         setContentView(R.layout.main);
 
-        // Get views
-        display = findViewById(R.id.display);
-        scale = findViewById(R.id.scale);
+        frequencyDisplay = findViewById(R.id.frequency);
+        volumeDisplay = findViewById(R.id.volume);
         knob = findViewById(R.id.knob);
         fine = findViewById(R.id.fine);
         level = findViewById(R.id.level);
@@ -231,11 +232,6 @@ public class Main extends Activity
     // On knob change
     @Override
     public void onKnobChange(Knob knob, float value) {
-        // Scale
-        if (scale != null) {
-            scale.setValue((int) (-value * 2.5));
-        }
-
         // Frequency
         double frequency = Math.pow(10.0, value / 200.0) * 10.0;
         double adjust = ((fine.getProgress() - MAX_FINE / 2) / (double) MAX_FINE) / 100.0;
@@ -243,8 +239,8 @@ public class Main extends Activity
         frequency += frequency * adjust;
 
         // Display
-        if (display != null) {
-            display.setFrequency(frequency);
+        if (frequencyDisplay != null) {
+            frequencyDisplay.setText(decimalFormat.format(frequency) + "Hz");
         }
 
         if (audio != null) {
@@ -271,8 +267,8 @@ public class Main extends Activity
 
                 frequency += frequency * adjust;
 
-                if (display != null) {
-                    display.setFrequency(frequency);
+                if (frequencyDisplay != null) {
+                    frequencyDisplay.setText(decimalFormat.format(frequency)  + "Hz");
                 }
 
                 if (audio != null) {
@@ -283,13 +279,13 @@ public class Main extends Activity
 
             // Level
             case R.id.level:
-                if (display != null) {
+                if (volumeDisplay != null) {
                     double level = Math.log10(progress / (double) MAX_LEVEL) * 20.0;
 
                     if (level < -80.0)
                         level = -80.0;
 
-                    display.setLevel(level);
+                    volumeDisplay.setText(decimalFormat.format(level) + "dB");
                 }
 
                 if (audio != null)

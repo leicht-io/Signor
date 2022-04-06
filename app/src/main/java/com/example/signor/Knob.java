@@ -53,10 +53,10 @@ public class Knob extends View
 
         Resources resources = getResources();
 
-        final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Siggen, 0, 0);
+        final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Signor, 0, 0);
 
-        int foregroundColour = typedArray.getColor(R.styleable .Siggen_TextColour, resources.getColor(android.R.color.black));
-        backgroundColour = typedArray.getColor(R.styleable .Siggen_BackgroundColour, resources.getColor(android.R.color.white));
+        int foregroundColour = typedArray.getColor(R.styleable.Signor_TextColour, resources.getColor(android.R.color.black));
+        backgroundColour = typedArray.getColor(R.styleable .Signor_BackgroundColour, resources.getColor(android.R.color.white));
 
         typedArray.recycle();
 
