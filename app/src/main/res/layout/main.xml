@@ -101,7 +101,8 @@
           android:layout_height="wrap_content"
           android:layout_weight="1.0"
           android:drawablePadding="8dp"
-          android:text="@string/sin" />
+          android:text="@string/sin"
+          style="?android:attr/buttonBarButtonStyle" />
 
       <Button
           android:id="@+id/square"
@@ -109,7 +110,8 @@
           android:layout_height="wrap_content"
           android:layout_weight="1.0"
           android:drawablePadding="8dp"
-          android:text="@string/squ" />
+          android:text="@string/squ"
+          style="?android:attr/buttonBarButtonStyle" />
 
       <Button
           android:id="@+id/sawtooth"
@@ -117,7 +119,8 @@
           android:layout_height="wrap_content"
           android:layout_weight="1.0"
           android:drawablePadding="8dp"
-          android:text="@string/saw" />
+          android:text="@string/saw"
+          style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
   </LinearLayout>
 
@@ -160,7 +163,8 @@
           android:layout_centerHorizontal="true"
           android:layout_width="75dp"
           android:layout_height="75dp"
-          android:drawablePadding="8dp" />
+          android:drawablePadding="8dp"
+          android:contentDescription="Play" />
 
       <ImageButton
           android:layout_marginStart="24dp"
