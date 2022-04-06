@@ -27,17 +27,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <TextView
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:layout_weight="1"
         android:text="0.00Hz"
         android:textColor="@color/white"
         android:textAlignment="viewStart"
         android:id="@+id/frequency"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textAlignment="viewEnd"
         android:text="0.00dB"
         android:id="@+id/volume"
@@ -62,7 +62,6 @@
         tools:ignore="ContentDescription" />
 
     <ImageButton
-        android:layout_centerInParent="true"
         android:id="@+id/lower"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -135,20 +134,20 @@
         android:layout_height="wrap_content">
 
       <ImageButton
-          android:layout_marginRight="16dp"
+          android:layout_marginEnd="16dp"
           android:background="@drawable/ic_transparent"
           android:id="@+id/back"
           android:layout_centerVertical="true"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_toLeftOf="@id/previous"
+          android:layout_toStartOf="@id/previous"
           tools:ignore="ContentDescription" />
 
       <ImageButton
           android:background="@drawable/ic_transparent"
-          android:layout_toLeftOf="@id/mute"
+          android:layout_toStartOf="@id/mute"
           android:id="@+id/previous"
-          android:layout_marginRight="24dp"
+          android:layout_marginEnd="24dp"
           android:layout_centerVertical="true"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -164,10 +163,10 @@
           android:drawablePadding="8dp" />
 
       <ImageButton
-          android:layout_marginLeft="24dp"
+          android:layout_marginStart="24dp"
           android:background="@drawable/ic_transparent"
           android:id="@+id/next"
-          android:layout_toRightOf="@id/mute"
+          android:layout_toEndOf="@id/mute"
           android:layout_centerVertical="true"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -175,8 +174,8 @@
 
       <ImageButton
           android:background="@drawable/ic_transparent"
-          android:layout_marginLeft="16dp"
-          android:layout_toRightOf="@id/next"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@id/next"
           android:id="@+id/forward"
           android:layout_width="wrap_content"
           android:layout_centerVertical="true"
