@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <TextView
+        android:textSize="18dp"
         android:layout_weight="1"
         android:text="0.00Hz"
         android:textColor="@color/white"
@@ -36,6 +37,7 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:textSize="18dp"
         android:textAlignment="viewEnd"
         android:text="0.00dB"
         android:id="@+id/volume"
@@ -68,6 +70,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
+        android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Fine Adjust" />
@@ -79,6 +82,7 @@
         android:layout_marginBottom="8dp" />
 
     <TextView
+        android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Volume" />
