@@ -47,92 +47,78 @@ public class Knob extends View
 
     private OnKnobChangeListener listener;
 
-    // Knob
     @SuppressWarnings("deprecation")
     public Knob(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         Resources resources = getResources();
 
-        final TypedArray typedArray =
-                context.obtainStyledAttributes(attrs, R.styleable.Siggen, 0, 0);
+        final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Siggen, 0, 0);
 
-        int foregroundColour =
-                typedArray.getColor(R.styleable
-                                .Siggen_TextColour,
-                        resources.getColor(android.R.color.black));
-        backgroundColour =
-                typedArray.getColor(R.styleable
-                                .Siggen_BackgroundColour,
-                        resources.getColor(android.R.color.white));
+        int foregroundColour = typedArray.getColor(R.styleable .Siggen_TextColour, resources.getColor(android.R.color.black));
+        backgroundColour = typedArray.getColor(R.styleable .Siggen_BackgroundColour, resources.getColor(android.R.color.white));
+
         typedArray.recycle();
 
-        if (foregroundColour > backgroundColour)
+        if (foregroundColour > backgroundColour) {
             knobColour = Color.DKGRAY;
-
-        else
+        } else {
             knobColour = Color.LTGRAY;
+        }
 
         matrix = new Matrix();
-
         detector = new GestureDetector(context, this);
     }
 
-    // On measure
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         // Get the parent dimensions
         View parent = (View) getParent();
-        int w = parent.getMeasuredWidth();
-        int h = parent.getMeasuredHeight();
+        int width = parent.getMeasuredWidth();
+        int height = parent.getMeasuredHeight();
 
-        if (w > h) {
-            if (parentWidth < w)
-                parentWidth = w;
+        if (width > height) {
+            if (parentWidth < width) {
+                parentWidth = width;
+            }
 
-            if (parentHeight < h)
-                parentHeight = h;
+            if (parentHeight < height) {
+                parentHeight = height;
+            }
         }
 
-        w = (parentWidth - MARGIN) / 2;
-        h = (parentWidth - MARGIN) / 2;
+        width = (parentWidth - MARGIN) / 2;
+        height = (parentWidth - MARGIN) / 2;
 
-        this.setMeasuredDimension(w, h);
+        this.setMeasuredDimension(width, height);
     }
 
-    // On size changed
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        width = w;
-        height = h;
+    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
+        this.width = width;
+        this.height = height;
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        gradient = new LinearGradient(0, -h * 2 / 3, 0, h * 2 / 3,
-                backgroundColour, Color.GRAY,
-                Shader.TileMode.CLAMP);
-        dimple = new LinearGradient(MARGIN / 2, -MARGIN / 2, MARGIN / 2,
-                MARGIN / 2, Color.GRAY, backgroundColour,
-                Shader.TileMode.CLAMP);
+        gradient = new LinearGradient(0, -height * 2 / 3, 0, height * 2 / 3, backgroundColour, Color.GRAY, Shader.TileMode.CLAMP);
+        dimple = new LinearGradient(MARGIN / 2, -MARGIN / 2, MARGIN / 2, MARGIN / 2, Color.GRAY, backgroundColour, Shader.TileMode.CLAMP);
     }
 
-    // Get value
     protected float getValue() {
         return value;
     }
 
-    // Set value
-    protected void setValue(float v) {
-        value = v;
+    protected void setValue(float value) {
+        this.value = value;
 
-        if (listener != null)
-            listener.onKnobChange(this, value);
+        if (listener != null) {
+            listener.onKnobChange(this, this.value);
+        }
 
         invalidate();
     }
 
-    // On draw
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.translate(width / 2, height / 2);
@@ -156,23 +142,25 @@ public class Knob extends View
         canvas.drawCircle(x, y, MARGIN, paint);
     }
 
-    // On click
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
         switch (id) {
             case R.id.previous:
                 value -= 1.0;
 
-                if (value < MIN)
+                if (value < MIN) {
                     value = MIN;
+                }
                 break;
 
             case R.id.next:
                 value += 1.0;
 
-                if (value > MAX)
+                if (value > MAX) {
                     value = MAX;
+                }
                 break;
 
             default:
@@ -181,13 +169,13 @@ public class Knob extends View
 
         value = Math.round(value);
 
-        if (listener != null)
+        if (listener != null) {
             listener.onKnobChange(this, value);
+        }
 
         invalidate();
     }
 
-    // On touch event
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (detector != null)
@@ -221,14 +209,17 @@ public class Knob extends View
                     // Update value
                     value += delta * SCALE / Math.PI;
 
-                    if (value < MIN)
+                    if (value < MIN) {
                         value = MIN;
+                    }
 
-                    if (value > MAX)
+                    if (value > MAX) {
                         value = MAX;
+                    }
 
-                    if (listener != null)
+                    if (listener != null) {
                         listener.onKnobChange(this, value);
+                    }
 
                     invalidate();
                 }
@@ -242,10 +233,8 @@ public class Knob extends View
         return true;
     }
 
-    // On fling
     @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                           float velocityY) {
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         // Get event coordinates
         float x1 = e1.getX() - width / 2;
         float y1 = e1.getY() - height / 2;
@@ -262,19 +251,19 @@ public class Knob extends View
         float velocity = (float) Math.abs(Math.hypot(velocityX, velocityY));
 
         // Allow for crossing origin
-        if (delta > Math.PI)
+        if (delta > Math.PI) {
             delta -= 2.0 * Math.PI;
+        }
 
-        if (delta < -Math.PI)
+        if (delta < -Math.PI) {
             delta += 2.0 * Math.PI;
+        }
 
         // Calculate target value for animator
-        float target =
-                value + Math.signum(delta) * velocity / VELOCITY;
+        float target = value + Math.signum(delta) * velocity / VELOCITY;
 
         // Start the animation
-        ValueAnimator animator =
-                ValueAnimator.ofFloat(value, target);
+        ValueAnimator animator = ValueAnimator.ofFloat(value, target);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.addUpdateListener(this);
         animator.start();
@@ -282,7 +271,6 @@ public class Knob extends View
         return true;
     }
 
-    // On animation update
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
         value = (Float) animation.getAnimatedValue();
@@ -297,8 +285,9 @@ public class Knob extends View
             value = MAX;
         }
 
-        if (listener != null)
+        if (listener != null) {
             listener.onKnobChange(this, value);
+        }
 
         invalidate();
     }
@@ -319,8 +308,7 @@ public class Knob extends View
     }
 
     @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-                            float distanceY) {
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         return false;
     }
 
@@ -333,7 +321,6 @@ public class Knob extends View
         return false;
     }
 
-    // On knob change listener
     public interface OnKnobChangeListener {
         void onKnobChange(Knob knob, float value);
     }

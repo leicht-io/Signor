@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         app:BackgroundColour="?android:attr/colorBackground"
-        app:TextColour="?android:attr/textColorPrimary" />
+        app:TextColour="@color/white" />
   </RelativeLayout>
 
   <LinearLayout

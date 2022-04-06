@@ -13,9 +13,9 @@ class Display(context: Context?, attrs: AttributeSet?) : DisplayContainer(contex
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val w = parentWidth
-        val h = parentHeight / 5
-        setMeasuredDimension(w, h)
+        val width = parentWidth
+        val height = parentHeight / 5
+        setMeasuredDimension(width, height)
     }
 
     fun setFrequency(frequency: Double) {
@@ -39,10 +39,10 @@ class Display(context: Context?, attrs: AttributeSet?) : DisplayContainer(contex
         paint.textScaleX = 0.9f
         paint.color = textColour
         paint.style = Paint.Style.FILL_AND_STROKE
-        canvas.drawText(frequencyText, MARGIN.toFloat(), height.toFloat(), paint)
+        canvas.drawText(frequencyText, 8.0.toFloat(), height.toFloat(), paint)
 
         val dbText = String.format(Locale.getDefault(), "%5.2fdB", level)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText(dbText, (width - MARGIN).toFloat(), height.toFloat(), paint)
+        canvas.drawText(dbText, (width - 8.0).toFloat(), height.toFloat(), paint)
     }
 }
