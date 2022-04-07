@@ -7,6 +7,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -83,7 +84,7 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
                 break;
         }
 
-        if(view != null) {
+        if (view != null) {
             onClick(view);
         }
 
@@ -190,35 +191,37 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
 
         switch (id) {
             case R.id.sine:
-                if (audio != null)
+                if (audio != null) {
                     audio.waveform = Audio.SINE;
-                ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_on_background, 0, 0, 0);
+                    /* ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
+                            android.R.drawable.radiobutton_on_background, 0, 0, 0);
 
-                v = findViewById(R.id.square);
-                ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_off_background, 0, 0, 0);
-                v = findViewById(R.id.sawtooth);
-                ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_off_background, 0, 0, 0);
+                    v = findViewById(R.id.square);
+                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
+                            android.R.drawable.radiobutton_off_background, 0, 0, 0);
+                    v = findViewById(R.id.sawtooth);
+                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
+                            android.R.drawable.radiobutton_off_background, 0, 0, 0); */
+                }
                 break;
             case R.id.square:
-                if (audio != null)
+                if (audio != null) {
                     audio.waveform = Audio.SQUARE;
-                ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_on_background, 0, 0, 0);
+/*                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
+                            android.R.drawable.radiobutton_on_background, 0, 0, 0);
 
-                v = findViewById(R.id.sine);
-                ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_off_background, 0, 0, 0);
-                v = findViewById(R.id.sawtooth);
-                ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_off_background, 0, 0, 0);
+                    v = findViewById(R.id.sine);
+                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
+                            android.R.drawable.radiobutton_off_background, 0, 0, 0);
+                    v = findViewById(R.id.sawtooth);
+                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
+                            android.R.drawable.radiobutton_off_background, 0, 0, 0); */
+                }
                 break;
             case R.id.sawtooth:
-                if (audio != null)
+                if (audio != null){
                     audio.waveform = Audio.SAWTOOTH;
-                ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
+                    /* ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
                         android.R.drawable.radiobutton_on_background, 0, 0, 0);
 
                 v = findViewById(R.id.sine);
@@ -226,19 +229,19 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
                         android.R.drawable.radiobutton_off_background, 0, 0, 0);
                 v = findViewById(R.id.square);
                 ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_off_background, 0, 0, 0);
+                        android.R.drawable.radiobutton_off_background, 0, 0, 0); */
+                }
                 break;
             case R.id.mute:
-                if (audio != null)
+                if (audio != null) {
                     audio.mute = !audio.mute;
 
-                // TODO: Change icons on white round button
-                /* if (audio.mute)
-                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                            android.R.drawable.checkbox_on_background, 0, 0, 0);
-                else
-                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                            android.R.drawable.checkbox_off_background, 0, 0, 0); */
+                    if (audio.mute) {
+                        ((ImageButton) v).setImageResource(R.drawable.ic_action_play);
+                    } else {
+                        ((ImageButton) v).setImageResource(R.drawable.ic_action_pause);
+                    }
+                }
                 break;
         }
     }

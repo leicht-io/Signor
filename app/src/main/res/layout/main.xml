@@ -40,7 +40,7 @@
                 android:text="@string/frequency_placeholder"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:textColor="@color/white"
+                android:textColor="@color/primary_text_color"
                 android:textSize="@dimen/primary_text_size" />
 
             <TextView
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/volume_placeholder"
                 android:gravity="center"
-                android:textColor="@color/white"
+                android:textColor="@color/primary_text_color"
                 android:textSize="@dimen/secondary_text_size" />
         </LinearLayout>
     </RelativeLayout>
@@ -109,28 +109,37 @@
             android:layout_toEndOf="@id/mute"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <Button
+            <ImageButton
+                android:src="@drawable/ic_wave_sine"
                 android:id="@+id/sine"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/wave_type_size"
+                android:layout_height="@dimen/wave_type_size"
                 android:layout_weight="1.0"
+                style="?android:attr/buttonBarButtonStyle"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 android:text="@string/sin" />
 
-            <Button
+            <ImageButton
+                android:src="@drawable/ic_wave_square"
                 android:id="@+id/square"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/wave_type_size"
+                android:layout_height="@dimen/wave_type_size"
                 android:layout_weight="1.0"
+                style="?android:attr/buttonBarButtonStyle"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 android:text="@string/squ" />
 
-            <Button
+            <ImageButton
+                android:src="@drawable/ic_wave_sawtooth"
                 android:id="@+id/sawtooth"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/wave_type_size"
+                android:layout_height="@dimen/wave_type_size"
                 android:layout_weight="1.0"
+                style="?android:attr/buttonBarButtonStyle"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 android:text="@string/saw" />
         </LinearLayout>
     </RelativeLayout>
