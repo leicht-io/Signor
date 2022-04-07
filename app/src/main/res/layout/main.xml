@@ -99,8 +99,10 @@
             android:layout_centerVertical="true"
             android:background="@drawable/button_rounded_corner"
             android:contentDescription="@string/play_pause"
-            android:drawablePadding="8dp"
-            android:scaleType="centerInside" />
+            android:adjustViewBounds="true"
+            android:padding="24dp"
+            android:src="@drawable/ic_action_play"
+            android:scaleType="fitCenter" />
 
         <LinearLayout
             android:layout_centerVertical="true"
