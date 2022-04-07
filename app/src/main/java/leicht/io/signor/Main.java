@@ -2,11 +2,7 @@ package leicht.io.signor;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -19,11 +15,8 @@ import java.text.DecimalFormat;
 public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar.OnSeekBarChangeListener,
         View.OnClickListener, ValueAnimator.AnimatorUpdateListener {
 
-    private static final int DELAY = 250;
     private static final int MAX_LEVEL = 100;
     private static final int MAX_FINE = 1000;
-
-    private static final String LOCK = "Signor:lock";
 
     private static final String STATE = "state";
 
@@ -31,7 +24,6 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
     private static final String MUTE = "mute";
     private static final String WAVE = "wave";
     private static final String LEVEL = "level";
-    private static final String SLEEP = "sleep";
     private static final String FINE = "fine";
 
     private Audio audio;
@@ -43,7 +35,6 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
     private SeekBar level;
     private SeekBar fine;
 
-    private PowerManager.WakeLock wakeLock;
     private PhoneStateListener phoneListener;
 
     @Override
@@ -58,25 +49,18 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
         fine = findViewById(R.id.fine);
         level = findViewById(R.id.level);
 
-        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK);
-
         audio = new Audio();
         audio.start();
 
-        // Setup widgets
         setupWidgets();
 
-        // Setup phone state listener
         setupPhoneStateListener();
 
-        // Restore state
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
         }
     }
 
-    // Restore state
     private void restoreState(Bundle savedInstanceState) {
         Bundle bundle = savedInstanceState.getBundle(STATE);
 
@@ -84,26 +68,24 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
             knob.setValue(bundle.getFloat(KNOB, 400));
         }
 
-        // Waveform
         int waveform = bundle.getInt(WAVE, Audio.SINE);
 
-        // Waveform buttons
         View view = null;
         switch (waveform) {
             case Audio.SINE:
                 view = findViewById(R.id.sine);
                 break;
-
             case Audio.SQUARE:
                 view = findViewById(R.id.square);
                 break;
-
             case Audio.SAWTOOTH:
                 view = findViewById(R.id.sawtooth);
                 break;
         }
 
-        onClick(view);
+        if(view != null) {
+            onClick(view);
+        }
 
         boolean mute = bundle.getBoolean(MUTE, false);
 
@@ -138,6 +120,7 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
             TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             manager.listen(phoneListener, PhoneStateListener.LISTEN_NONE);
         } catch (Exception e) {
+            // Do nothing
         }
 
         if (audio != null) {
@@ -145,18 +128,15 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
         }
     }
 
-    // On knob change
     @Override
     public void onKnobChange(Knob knob, float value) {
-        // Frequency
         double frequency = Math.pow(10.0, value / 200.0) * 10.0;
-        double adjust = ((fine.getProgress() - MAX_FINE / 2) / (double) MAX_FINE) / 100.0;
+        double adjust = ((fine.getProgress() - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 100.0;
 
         frequency += frequency * adjust;
 
-        // Display
         if (frequencyDisplay != null) {
-            frequencyDisplay.setText(decimalFormat.format(frequency) + "Hz");
+            frequencyDisplay.setText(String.format("%sHz", decimalFormat.format(frequency)));
         }
 
         if (audio != null) {
@@ -172,17 +152,15 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
             return;
         }
 
-        // Check id
         switch (id) {
-            // Fine
             case R.id.fine: {
                 double frequency = Math.pow(10.0, knob.getValue() / 200.0) * 10.0;
-                double adjust = ((progress - MAX_FINE / 2) / (double) MAX_FINE) / 50.0;
+                double adjust = ((progress - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 50.0;
 
                 frequency += frequency * adjust;
 
                 if (frequencyDisplay != null) {
-                    frequencyDisplay.setText(decimalFormat.format(frequency) + "Hz");
+                    frequencyDisplay.setText(String.format("%sHz", decimalFormat.format(frequency)));
                 }
 
                 if (audio != null) {
@@ -190,8 +168,6 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
                 }
             }
             break;
-
-            // Level
             case R.id.level:
                 if (volumeDisplay != null) {
                     double level = Math.log10(progress / (double) MAX_LEVEL) * 20.0;
@@ -199,7 +175,7 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
                     if (level < -80.0)
                         level = -80.0;
 
-                    volumeDisplay.setText(decimalFormat.format(level) + "dB");
+                    volumeDisplay.setText(String.format("%sdB", decimalFormat.format(level)));
                 }
 
                 if (audio != null)
@@ -252,11 +228,11 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
                 ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
                         android.R.drawable.radiobutton_off_background, 0, 0, 0);
                 break;
-
             case R.id.mute:
                 if (audio != null)
                     audio.mute = !audio.mute;
 
+                // TODO: Change icons on white round button
                 /* if (audio.mute)
                     ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
                             android.R.drawable.checkbox_on_background, 0, 0, 0);
@@ -295,17 +271,14 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
             knob.setValue(400);
 
             view = findViewById(R.id.previous);
-            if (view != null)
+            if (view != null) {
                 view.setOnClickListener(knob);
+            }
 
             view = findViewById(R.id.next);
-            if (view != null)
+            if (view != null) {
                 view.setOnClickListener(knob);
-        }
-
-        view = findViewById(R.id.back);
-        if (view != null) {
-            view.setOnClickListener(this);
+            }
         }
 
         view = findViewById(R.id.forward);
@@ -359,6 +332,7 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
     }
 
     private void setupPhoneStateListener() {
+        // TODO: Change to TelephonyCallback instead. See: https://developer.android.com/reference/android/telephony/TelephonyCallback
         phoneListener = new PhoneStateListener() {
             public void onCallStateChanged(int state, String incomingNumber) {
                 if (state != TelephonyManager.CALL_STATE_IDLE) {
@@ -377,6 +351,7 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
             TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             manager.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);
         } catch (Exception e) {
+            // Do nothing
         }
     }
 
@@ -386,126 +361,5 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-    }
-
-    // Audio
-    protected class Audio implements Runnable {
-        protected static final int SINE = 0;
-        protected static final int SQUARE = 1;
-        protected static final int SAWTOOTH = 2;
-
-        protected int waveform;
-        protected boolean mute = true;
-
-        protected double frequency;
-        protected double level;
-
-        protected float duty;
-
-        protected Thread thread;
-
-        private AudioTrack audioTrack;
-
-        protected Audio() {
-            frequency = 440.0;
-            level = 16384.0;
-        }
-
-        // Start
-        protected void start() {
-            thread = new Thread(this, "Audio");
-            thread.start();
-        }
-
-        // Stop
-        protected void stop() {
-            Thread t = thread;
-            thread = null;
-
-            try {
-                if (t != null && t.isAlive()) {
-                    t.join(); // Wait for the thread to exit
-                }
-            } catch (Exception e) {
-            }
-        }
-
-        public void run() {
-            processAudio();
-        }
-
-        // Process audio
-        @SuppressWarnings("deprecation")
-        protected void processAudio() {
-            short buffer[];
-
-            int rate = AudioTrack.getNativeOutputSampleRate(AudioManager.STREAM_MUSIC);
-            int minSize = AudioTrack.getMinBufferSize(rate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
-
-            // Find a suitable buffer size
-            int sizes[] = {1024, 2048, 4096, 8192, 16384, 32768};
-            int size = 0;
-
-            for (int s : sizes) {
-                if (s > minSize) {
-                    size = s;
-                    break;
-                }
-            }
-
-            final double K = 2.0 * Math.PI / rate;
-
-            // Create the audio track
-            audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, rate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, size, AudioTrack.MODE_STREAM);
-
-            // Check state
-            int state = audioTrack.getState();
-
-            if (state != AudioTrack.STATE_INITIALIZED) {
-                audioTrack.release();
-                return;
-            }
-
-            audioTrack.play();
-
-            // Create the buffer
-            buffer = new short[size];
-
-            // Initialise the generator variables
-            double f = frequency;
-            double l = 0.0;
-            double q = 0.0;
-
-            while (thread != null) {
-                double t = (duty * 2.0 * Math.PI) - Math.PI;
-
-                // Fill the current buffer
-                for (int i = 0; i < buffer.length; i++) {
-                    f += (frequency - f) / 4096.0;
-                    l += ((mute ? 0.0 : level) * 16384.0 - l) / 4096.0;
-                    q += ((q + (f * K)) < Math.PI) ? f * K :
-                            (f * K) - (2.0 * Math.PI);
-
-                    switch (waveform) {
-                        case SINE:
-                            buffer[i] = (short) Math.round(Math.sin(q) * l);
-                            break;
-
-                        case SQUARE:
-                            buffer[i] = (short) ((q > t) ? l : -l);
-                            break;
-
-                        case SAWTOOTH:
-                            buffer[i] = (short) Math.round((q / Math.PI) * l);
-                            break;
-                    }
-                }
-
-                audioTrack.write(buffer, 0, buffer.length);
-            }
-
-            audioTrack.stop();
-            audioTrack.release();
-        }
     }
 }

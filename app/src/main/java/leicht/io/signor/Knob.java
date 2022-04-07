@@ -32,39 +32,30 @@ public class Knob extends View
 
     private int width;
     private int height;
-    private int knobColour;
-    private int backgroundColour;
+    private final int backgroundColour;
 
     private boolean move;
     private float value;
     private float last;
 
-    private Matrix matrix;
+    private final Matrix matrix;
     private Paint paint;
     private LinearGradient gradient;
     private LinearGradient dimple;
-    private GestureDetector detector;
+    private final GestureDetector detector;
 
     private OnKnobChangeListener listener;
 
-    @SuppressWarnings("deprecation")
     public Knob(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         Resources resources = getResources();
 
         final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Signor, 0, 0);
-
-        int foregroundColour = typedArray.getColor(R.styleable.Signor_TextColour, resources.getColor(android.R.color.black));
-        backgroundColour = typedArray.getColor(R.styleable .Signor_BackgroundColour, resources.getColor(android.R.color.white));
+        // TODO: Change way to get resources
+        backgroundColour = typedArray.getColor(R.styleable.Signor_BackgroundColour, resources.getColor(android.R.color.white));
 
         typedArray.recycle();
-
-        if (foregroundColour > backgroundColour) {
-            knobColour = Color.DKGRAY;
-        } else {
-            knobColour = Color.LTGRAY;
-        }
 
         matrix = new Matrix();
         detector = new GestureDetector(context, this);
@@ -74,7 +65,6 @@ public class Knob extends View
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        // Get the parent dimensions
         View parent = (View) getParent();
         int width = parent.getMeasuredWidth();
         int height = parent.getMeasuredHeight();
@@ -101,8 +91,13 @@ public class Knob extends View
         this.height = height;
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        gradient = new LinearGradient(0, -height * 2 / 3, 0, height * 2 / 3, backgroundColour, Color.GRAY, Shader.TileMode.CLAMP);
-        dimple = new LinearGradient(MARGIN / 2, -MARGIN / 2, MARGIN / 2, MARGIN / 2, Color.GRAY, backgroundColour, Shader.TileMode.CLAMP);
+        int gradientY0 = -height * 2 / 3;
+        int gradientY1 = Math.abs(gradientY0);
+        int dimpleX0 = MARGIN / 2;
+        int dimpleY0 = -dimpleX0;
+
+        gradient = new LinearGradient(0, gradientY0, 0, gradientY1, backgroundColour, Color.GRAY, Shader.TileMode.CLAMP);
+        dimple = new LinearGradient(dimpleX0, dimpleY0, dimpleX0, dimpleX0, Color.GRAY, backgroundColour, Shader.TileMode.CLAMP);
     }
 
     protected float getValue() {
@@ -130,7 +125,7 @@ public class Knob extends View
         canvas.drawCircle(0, 0, radius, paint);
 
         paint.setShader(null);
-        paint.setColor(knobColour);
+        paint.setColor(Color.LTGRAY);
         canvas.drawCircle(0, 0, radius - MARGIN, paint);
 
         float x = (float) (Math.sin(value * Math.PI / SCALE) * radius * 0.8);
@@ -154,7 +149,6 @@ public class Knob extends View
                     value = MIN;
                 }
                 break;
-
             case R.id.next:
                 value += 1.0;
 
@@ -162,7 +156,6 @@ public class Knob extends View
                     value = MAX;
                 }
                 break;
-
             default:
                 return;
         }
@@ -178,8 +171,9 @@ public class Knob extends View
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (detector != null)
+        if (detector != null) {
             detector.onTouchEvent(event);
+        }
 
         float x = event.getX() - width / 2;
         float y = event.getY() - height / 2;
@@ -189,24 +183,21 @@ public class Knob extends View
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 break;
-
             case MotionEvent.ACTION_MOVE:
 
-                if (!move)
+                if (!move) {
                     move = true;
-
-                else {
-                    // Difference
+                } else {
                     float delta = theta - last;
 
-                    // Allow for crossing origin
-                    if (delta > Math.PI)
+                    if (delta > Math.PI) {
                         delta -= 2.0 * Math.PI;
+                    }
 
-                    if (delta < -Math.PI)
+                    if (delta < -Math.PI) {
                         delta += 2.0 * Math.PI;
+                    }
 
-                    // Update value
                     value += delta * SCALE / Math.PI;
 
                     if (value < MIN) {
@@ -233,24 +224,18 @@ public class Knob extends View
         return true;
     }
 
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        // Get event coordinates
-        float x1 = e1.getX() - width / 2;
-        float y1 = e1.getY() - height / 2;
+    private float calculateNewFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+        float x1 = event1.getX() - width / 2;
+        float y1 = event1.getY() - height / 2;
+        float x2 = event2.getX() - width / 2;
+        float y2 = event2.getY() - height / 2;
 
-        float x2 = e2.getX() - width / 2;
-        float y2 = e2.getY() - height / 2;
-
-        // Calculate angles
         float theta1 = (float) Math.atan2(x1, -y1);
         float theta2 = (float) Math.atan2(x2, -y2);
 
-        // Calculate difference and absolute velocity
         float delta = theta2 - theta1;
         float velocity = (float) Math.abs(Math.hypot(velocityX, velocityY));
 
-        // Allow for crossing origin
         if (delta > Math.PI) {
             delta -= 2.0 * Math.PI;
         }
@@ -259,11 +244,12 @@ public class Knob extends View
             delta += 2.0 * Math.PI;
         }
 
-        // Calculate target value for animator
-        float target = value + Math.signum(delta) * velocity / VELOCITY;
+        return value + Math.signum(delta) * velocity / VELOCITY;
+    }
 
-        // Start the animation
-        ValueAnimator animator = ValueAnimator.ofFloat(value, target);
+    @Override
+    public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+        ValueAnimator animator = ValueAnimator.ofFloat(value, calculateNewFling(event1, event2, velocityX, velocityY));
         animator.setInterpolator(new DecelerateInterpolator());
         animator.addUpdateListener(this);
         animator.start();
@@ -292,28 +278,27 @@ public class Knob extends View
         invalidate();
     }
 
-    // Set listener
-    protected void setOnKnobChangeListener(OnKnobChangeListener l) {
-        listener = l;
+    protected void setOnKnobChangeListener(OnKnobChangeListener listener) {
+        this.listener = listener;
     }
 
-    // A collection of unused unwanted unloved listener callback methods
+    // A collection of listener callback methods we don't need.
+    @Override
+    public void onLongPress(MotionEvent e) {
+    }
+
     @Override
     public boolean onDown(MotionEvent e) {
         return false;
     }
 
     @Override
-    public void onLongPress(MotionEvent e) {
+    public void onShowPress(MotionEvent e) {
     }
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent e) {
     }
 
     @Override
