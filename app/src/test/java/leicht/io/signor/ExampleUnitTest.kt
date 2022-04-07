@@ -1,4 +1,4 @@
-package com.example.signor
+package leicht.io.signor
 
 import org.junit.Test
 

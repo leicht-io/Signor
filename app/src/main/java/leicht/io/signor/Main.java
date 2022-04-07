@@ -1,44 +1,22 @@
-package com.example.signor;
+package leicht.io.signor;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.text.InputType;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONArray;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
 
-public class Main extends Activity
-        implements Knob.OnKnobChangeListener, SeekBar.OnSeekBarChangeListener,
+public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar.OnSeekBarChangeListener,
         View.OnClickListener, ValueAnimator.AnimatorUpdateListener {
 
     private static final int DELAY = 250;
@@ -50,42 +28,27 @@ public class Main extends Activity
     private static final String STATE = "state";
 
     private static final String KNOB = "knob";
-    private static final String WAVE = "wave";
     private static final String MUTE = "mute";
-    private static final String FINE = "fine";
+    private static final String WAVE = "wave";
     private static final String LEVEL = "level";
     private static final String SLEEP = "sleep";
-
-    public static final String PREF_BOOKMARKS = "pref_bookmarks";
-    public static final String PREF_DARK_THEME = "pref_dark_theme";
-    public static final String PREF_DUTY = "pref_duty";
+    private static final String FINE = "fine";
 
     private Audio audio;
-    private DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private Knob knob;
     private TextView frequencyDisplay;
     private TextView volumeDisplay;
 
-    private SeekBar fine;
     private SeekBar level;
-
-    private Toast toast;
+    private SeekBar fine;
 
     private PowerManager.WakeLock wakeLock;
     private PhoneStateListener phoneListener;
-    private List<Double> bookmarks;
-
-    private boolean sleep;
-    private boolean darkTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getPreferences();
-
-        if (!darkTheme)
-            setTheme(R.style.AppTheme);
 
         setContentView(R.layout.main);
 
@@ -95,7 +58,6 @@ public class Main extends Activity
         fine = findViewById(R.id.fine);
         level = findViewById(R.id.level);
 
-        // Get wake lock
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK);
 
@@ -111,21 +73,6 @@ public class Main extends Activity
         // Restore state
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
-        }
-    }
-
-    // On Resume
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        boolean dark = darkTheme;
-
-        // Get preferences
-        getPreferences();
-
-        if (dark != darkTheme && Build.VERSION.SDK_INT != Build.VERSION_CODES.M) {
-            recreate();
         }
     }
 
@@ -165,16 +112,8 @@ public class Main extends Activity
             onClick(view);
         }
 
-        // Fine frequency and level
         fine.setProgress(bundle.getInt(FINE, MAX_FINE / 2));
         level.setProgress(bundle.getInt(LEVEL, MAX_LEVEL / 10));
-
-        // Sleep
-        sleep = bundle.getBoolean(SLEEP, false);
-
-        if (sleep) {
-            wakeLock.acquire(10 * 60 * 1000L); // 10 minutes
-        }
     }
 
     @Override
@@ -188,26 +127,7 @@ public class Main extends Activity
         bundle.putBoolean(MUTE, audio.mute);
         bundle.putInt(FINE, fine.getProgress());
         bundle.putInt(LEVEL, level.getProgress());
-        bundle.putBoolean(SLEEP, sleep);
         outState.putBundle(STATE, bundle);
-    }
-
-    // On pause
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // Get preferences
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (bookmarks != null) {
-            JSONArray json = new JSONArray(bookmarks);
-
-            // Save preference
-            SharedPreferences.Editor edit = preferences.edit();
-            edit.putString(PREF_BOOKMARKS, json.toString());
-            edit.apply();
-        }
     }
 
     @Override
@@ -218,10 +138,6 @@ public class Main extends Activity
             TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             manager.listen(phoneListener, PhoneStateListener.LISTEN_NONE);
         } catch (Exception e) {
-        }
-
-        if (sleep) {
-            wakeLock.release();
         }
 
         if (audio != null) {
@@ -246,8 +162,6 @@ public class Main extends Activity
         if (audio != null) {
             audio.frequency = frequency;
         }
-
-        checkBookmarks();
     }
 
     @Override
@@ -268,7 +182,7 @@ public class Main extends Activity
                 frequency += frequency * adjust;
 
                 if (frequencyDisplay != null) {
-                    frequencyDisplay.setText(decimalFormat.format(frequency)  + "Hz");
+                    frequencyDisplay.setText(decimalFormat.format(frequency) + "Hz");
                 }
 
                 if (audio != null) {
@@ -299,7 +213,6 @@ public class Main extends Activity
         int id = v.getId();
 
         switch (id) {
-            // Sine
             case R.id.sine:
                 if (audio != null)
                     audio.waveform = Audio.SINE;
@@ -313,8 +226,6 @@ public class Main extends Activity
                 ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
                         android.R.drawable.radiobutton_off_background, 0, 0, 0);
                 break;
-
-            // Square
             case R.id.square:
                 if (audio != null)
                     audio.waveform = Audio.SQUARE;
@@ -328,8 +239,6 @@ public class Main extends Activity
                 ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
                         android.R.drawable.radiobutton_off_background, 0, 0, 0);
                 break;
-
-            // Sawtooth
             case R.id.sawtooth:
                 if (audio != null)
                     audio.waveform = Audio.SAWTOOTH;
@@ -344,7 +253,6 @@ public class Main extends Activity
                         android.R.drawable.radiobutton_off_background, 0, 0, 0);
                 break;
 
-            // Mute
             case R.id.mute:
                 if (audio != null)
                     audio.mute = !audio.mute;
@@ -356,65 +264,17 @@ public class Main extends Activity
                     ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
                             android.R.drawable.checkbox_off_background, 0, 0, 0); */
                 break;
-
-            // Back
-            case R.id.back:
-                if (bookmarks != null) {
-                    try {
-                        Collections.reverse(bookmarks);
-                        for (double bookmark : bookmarks) {
-                            if (bookmark < audio.frequency) {
-                                animateBookmark(audio.frequency, bookmark);
-                                break;
-                            }
-                        }
-                    } finally {
-                        Collections.sort(bookmarks);
-                    }
-                }
-                break;
-
-            // Forward
-            case R.id.forward:
-                if (bookmarks != null) {
-                    for (double bookmark : bookmarks) {
-                        if (bookmark > audio.frequency) {
-                            animateBookmark(audio.frequency, bookmark);
-                            break;
-                        }
-                    }
-                }
-                break;
-
-            // Lower
             case R.id.lower:
                 if (fine != null) {
                     int progress = fine.getProgress();
                     fine.setProgress(--progress);
                 }
                 break;
-
-            // Higher
             case R.id.higher: {
                 int progress = fine.getProgress();
                 fine.setProgress(++progress);
             }
             break;
-        }
-    }
-
-    private void animateBookmark(double start, double finish) {
-        float value = (float) Math.log10(start / 10.0) * 200;
-        float target = (float) Math.log10(finish / 10.0) * 200;
-
-        // Start the animation
-        ValueAnimator animator = ValueAnimator.ofFloat(value, target);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.addUpdateListener(this);
-        animator.start();
-
-        if (fine != null) {
-            fine.setProgress(MAX_FINE / 2);
         }
     }
 
@@ -424,61 +284,6 @@ public class Main extends Activity
 
         if (knob != null) {
             knob.setValue(value);
-        }
-    }
-
-    void showToast(String text) {
-        if (toast != null) {
-            toast.cancel();
-        }
-
-        // Make a new one
-        toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-    }
-
-    private void checkBookmarks() {
-        knob.postDelayed(() ->        {
-            View back = findViewById(R.id.back);
-            View forward = findViewById(R.id.forward);
-
-            back.setEnabled(false);
-            forward.setEnabled(false);
-
-            if (bookmarks != null) {
-                for (double bookmark : bookmarks) {
-                    if (bookmark < audio.frequency) {
-                        back.setEnabled(true);
-                    }
-
-                    if (bookmark > audio.frequency) {
-                        forward.setEnabled(true);
-                    }
-                }
-            }
-        }, DELAY);
-    }
-
-    private void getPreferences() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (audio != null) {
-            audio.duty = Float.parseFloat(preferences.getString(PREF_DUTY, "0.5"));
-        }
-
-        darkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
-
-        String string = preferences.getString(PREF_BOOKMARKS, "");
-
-        try {
-            JSONArray json = new JSONArray(string);
-            bookmarks = new ArrayList<>();
-            for (int i = 0; i < json.length(); i++)
-                bookmarks.add(json.getDouble(i));
-
-            checkBookmarks();
-        } catch (Exception e) {
         }
     }
 
