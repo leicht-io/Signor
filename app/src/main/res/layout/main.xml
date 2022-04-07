@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#171c26"
+    android:paddingTop="@dimen/padding_top_bottom"
+    android:paddingBottom="@dimen/padding_top_bottom"
+    android:paddingLeft="@dimen/padding_left_right"
+    android:paddingRight="@dimen/padding_left_right"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/knobcontainer"
         android:layout_width="match_parent"
         android:layout_height="242dp"
-        android:layout_margin="16dp"
         android:orientation="vertical">
 
         <leicht.io.signor.Knob
-            android:layout_marginTop="42dp"
+            android:layout_centerInParent="true"
             android:id="@+id/knob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,52 +26,41 @@
             app:TextColour="?android:attr/textColorPrimary" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
+                android:clickable="false"
                 android:id="@+id/frequency"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="@string/frequency_placeholder"
-                android:textAlignment="viewStart"
+                android:gravity="center"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/primary_text_size" />
 
             <TextView
+                android:clickable="false"
                 android:id="@+id/volume"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/volume_placeholder"
-                android:textAlignment="viewEnd"
+                android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/secondary_text_size" />
         </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
+        android:layout_marginTop="56dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/knobcontainer"
-        android:layout_margin="16dp"
         android:orientation="vertical">
-
-        <ImageButton
-            android:id="@+id/higher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:ignore="ContentDescription" />
-
-        <ImageButton
-            android:id="@+id/lower"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:ignore="ContentDescription" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,19 +85,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+        <ImageButton
+            android:id="@+id/mute"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginEnd="16dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/button_rounded_corner"
+            android:contentDescription="@string/play_pause"
+            android:drawablePadding="8dp"
+            android:scaleType="centerInside" />
 
         <LinearLayout
-            android:layout_marginTop="16dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/mute"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <Button
                 android:id="@+id/sine"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:drawablePadding="8dp"
                 android:text="@string/sin" />
 
             <Button
@@ -115,7 +121,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:drawablePadding="8dp"
                 android:text="@string/squ" />
 
             <Button
@@ -124,66 +129,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:drawablePadding="8dp"
                 android:text="@string/saw" />
         </LinearLayout>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="56dp">
-
-        <ImageButton
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="16dp"
-            android:layout_toStartOf="@id/previous"
-            android:background="@drawable/ic_transparent"
-            tools:ignore="ContentDescription" />
-
-        <ImageButton
-            android:id="@+id/previous"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="24dp"
-            android:layout_toStartOf="@id/mute"
-            android:background="@drawable/ic_transparent"
-            tools:ignore="ContentDescription" />
-
-        <ImageButton
-            android:id="@+id/mute"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/button_rounded_corner"
-            android:contentDescription="@string/play_pause"
-            android:drawablePadding="8dp"
-            android:scaleType="centerInside" />
-
-        <ImageButton
-            android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="24dp"
-            android:layout_toEndOf="@id/mute"
-            android:background="@drawable/ic_transparent"
-            tools:ignore="ContentDescription" />
-
-        <ImageButton
-            android:id="@+id/forward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@id/next"
-            android:background="@drawable/ic_transparent"
-            tools:ignore="ContentDescription" />
     </RelativeLayout>
 </RelativeLayout>

@@ -240,17 +240,6 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
                     ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
                             android.R.drawable.checkbox_off_background, 0, 0, 0); */
                 break;
-            case R.id.lower:
-                if (fine != null) {
-                    int progress = fine.getProgress();
-                    fine.setProgress(--progress);
-                }
-                break;
-            case R.id.higher: {
-                int progress = fine.getProgress();
-                fine.setProgress(++progress);
-            }
-            break;
         }
     }
 
@@ -269,31 +258,6 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
         if (knob != null) {
             knob.setOnKnobChangeListener(this);
             knob.setValue(400);
-
-            view = findViewById(R.id.previous);
-            if (view != null) {
-                view.setOnClickListener(knob);
-            }
-
-            view = findViewById(R.id.next);
-            if (view != null) {
-                view.setOnClickListener(knob);
-            }
-        }
-
-        view = findViewById(R.id.forward);
-        if (view != null) {
-            view.setOnClickListener(this);
-        }
-
-        view = findViewById(R.id.lower);
-        if (view != null) {
-            view.setOnClickListener(this);
-        }
-
-        view = findViewById(R.id.higher);
-        if (view != null) {
-            view.setOnClickListener(this);
         }
 
         if (fine != null) {
