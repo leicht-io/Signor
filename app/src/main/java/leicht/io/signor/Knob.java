@@ -16,10 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-// Knob
-public class Knob extends View
-        implements View.OnClickListener, GestureDetector.OnGestureListener,
-        ValueAnimator.AnimatorUpdateListener {
+public class Knob extends View implements View.OnClickListener, GestureDetector.OnGestureListener, ValueAnimator.AnimatorUpdateListener {
     private static final int MARGIN = 8;
 
     private static final float MIN = -400;
@@ -261,7 +258,6 @@ public class Knob extends View
         this.listener = listener;
     }
 
-    // A collection of listener callback methods we don't need.
     @Override
     public void onLongPress(MotionEvent e) {
     }
@@ -283,9 +279,5 @@ public class Knob extends View
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
         return false;
-    }
-
-    public interface OnKnobChangeListener {
-        void onKnobChange(Knob knob, float value);
     }
 }

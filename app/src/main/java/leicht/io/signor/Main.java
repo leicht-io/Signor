@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar.OnSeekBarChangeListener, ValueAnimator.AnimatorUpdateListener {
+public class Main extends Activity implements OnKnobChangeListener, SeekBar.OnSeekBarChangeListener, ValueAnimator.AnimatorUpdateListener {
     private static final int MAX_LEVEL = 100;
     private static final int MAX_FINE = 1000;
 
