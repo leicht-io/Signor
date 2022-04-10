@@ -6,16 +6,13 @@ import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar.OnSeekBarChangeListener,
-        View.OnClickListener, ValueAnimator.AnimatorUpdateListener {
-
+public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar.OnSeekBarChangeListener, ValueAnimator.AnimatorUpdateListener {
     private static final int MAX_LEVEL = 100;
     private static final int MAX_FINE = 1000;
 
@@ -27,14 +24,20 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
     private static final String LEVEL = "level";
     private static final String FINE = "fine";
 
-    private Audio audio;
     private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
+    private Audio audio;
     private Knob knob;
     private TextView frequencyDisplay;
     private TextView volumeDisplay;
 
-    private SeekBar level;
-    private SeekBar fine;
+    private SeekBar volumeAdjust;
+    private SeekBar fineAdjust;
+
+    private ImageButton sineButton;
+    private ImageButton sawtoothButton;
+    private ImageButton squareButton;
+    private ImageButton playButton;
 
     private PhoneStateListener phoneListener;
 
@@ -44,18 +47,23 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
 
         setContentView(R.layout.main);
 
-        frequencyDisplay = findViewById(R.id.frequency);
-        volumeDisplay = findViewById(R.id.volume);
+        frequencyDisplay = findViewById(R.id.frequencyDisplay);
+        volumeDisplay = findViewById(R.id.volumeDisplay);
+
         knob = findViewById(R.id.knob);
-        fine = findViewById(R.id.fine);
-        level = findViewById(R.id.level);
+        fineAdjust = findViewById(R.id.fineAdjust);
+        volumeAdjust = findViewById(R.id.volumeAdjust);
 
-        audio = new Audio();
-        audio.start();
+        sineButton = findViewById(R.id.sine);
+        sineButton.setSelected(true);
 
-        setupWidgets();
+        sawtoothButton = findViewById(R.id.sawtooth);
+        squareButton = findViewById(R.id.square);
+        playButton = findViewById(R.id.play);
 
-        setupPhoneStateListener();
+        initDefaultUi();
+        setPhoneStateListener();
+        setOnClickListeners();
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
@@ -70,33 +78,25 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
         }
 
         int waveform = bundle.getInt(WAVE, Audio.SINE);
-
-        View view = null;
         switch (waveform) {
             case Audio.SINE:
-                view = findViewById(R.id.sine);
+                sineButton.performClick();
                 break;
             case Audio.SQUARE:
-                view = findViewById(R.id.square);
+                squareButton.performClick();
                 break;
             case Audio.SAWTOOTH:
-                view = findViewById(R.id.sawtooth);
+                sawtoothButton.performClick();
                 break;
-        }
-
-        if (view != null) {
-            onClick(view);
         }
 
         boolean mute = bundle.getBoolean(MUTE, false);
-
-        if (mute) {
-            view = findViewById(R.id.mute);
-            onClick(view);
+        if (!mute) {
+            playButton.performClick();
         }
 
-        fine.setProgress(bundle.getInt(FINE, MAX_FINE / 2));
-        level.setProgress(bundle.getInt(LEVEL, MAX_LEVEL / 10));
+        fineAdjust.setProgress(bundle.getInt(FINE, MAX_FINE / 2));
+        volumeAdjust.setProgress(bundle.getInt(LEVEL, MAX_LEVEL / 10));
     }
 
     @Override
@@ -108,8 +108,8 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
         bundle.putFloat(KNOB, knob.getValue());
         bundle.putInt(WAVE, audio.waveform);
         bundle.putBoolean(MUTE, audio.mute);
-        bundle.putInt(FINE, fine.getProgress());
-        bundle.putInt(LEVEL, level.getProgress());
+        bundle.putInt(FINE, fineAdjust.getProgress());
+        bundle.putInt(LEVEL, volumeAdjust.getProgress());
         outState.putBundle(STATE, bundle);
     }
 
@@ -132,7 +132,7 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
     @Override
     public void onKnobChange(Knob knob, float value) {
         double frequency = Math.pow(10.0, value / 200.0) * 10.0;
-        double adjust = ((fine.getProgress() - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 100.0;
+        double adjust = ((fineAdjust.getProgress() - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 100.0;
 
         frequency += frequency * adjust;
 
@@ -154,7 +154,7 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
         }
 
         switch (id) {
-            case R.id.fine: {
+            case R.id.fineAdjust: {
                 double frequency = Math.pow(10.0, knob.getValue() / 200.0) * 10.0;
                 double adjust = ((progress - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 50.0;
 
@@ -169,7 +169,7 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
                 }
             }
             break;
-            case R.id.level:
+            case R.id.volumeAdjust:
                 if (volumeDisplay != null) {
                     double level = Math.log10(progress / (double) MAX_LEVEL) * 20.0;
 
@@ -186,67 +186,6 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
     }
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-
-        switch (id) {
-            case R.id.sine:
-                if (audio != null) {
-                    audio.waveform = Audio.SINE;
-                    /* ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                            android.R.drawable.radiobutton_on_background, 0, 0, 0);
-
-                    v = findViewById(R.id.square);
-                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                            android.R.drawable.radiobutton_off_background, 0, 0, 0);
-                    v = findViewById(R.id.sawtooth);
-                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                            android.R.drawable.radiobutton_off_background, 0, 0, 0); */
-                }
-                break;
-            case R.id.square:
-                if (audio != null) {
-                    audio.waveform = Audio.SQUARE;
-/*                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                            android.R.drawable.radiobutton_on_background, 0, 0, 0);
-
-                    v = findViewById(R.id.sine);
-                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                            android.R.drawable.radiobutton_off_background, 0, 0, 0);
-                    v = findViewById(R.id.sawtooth);
-                    ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                            android.R.drawable.radiobutton_off_background, 0, 0, 0); */
-                }
-                break;
-            case R.id.sawtooth:
-                if (audio != null){
-                    audio.waveform = Audio.SAWTOOTH;
-                    /* ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_on_background, 0, 0, 0);
-
-                v = findViewById(R.id.sine);
-                ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_off_background, 0, 0, 0);
-                v = findViewById(R.id.square);
-                ((Button) v).setCompoundDrawablesWithIntrinsicBounds(
-                        android.R.drawable.radiobutton_off_background, 0, 0, 0); */
-                }
-                break;
-            case R.id.mute:
-                if (audio != null) {
-                    audio.mute = !audio.mute;
-
-                    if (audio.mute) {
-                        ((ImageButton) v).setImageResource(R.drawable.ic_action_play);
-                    } else {
-                        ((ImageButton) v).setImageResource(R.drawable.ic_action_pause);
-                    }
-                }
-                break;
-        }
-    }
-
-    @Override
     public void onAnimationUpdate(ValueAnimator animation) {
         float value = (Float) animation.getAnimatedValue();
 
@@ -255,59 +194,83 @@ public class Main extends Activity implements Knob.OnKnobChangeListener, SeekBar
         }
     }
 
-    private void setupWidgets() {
-        View view;
+    private void setOnClickListeners() {
+        sineButton.setOnClickListener(view -> {
+            if (audio != null) {
+                audio.waveform = Audio.SINE;
+                view.setSelected(true);
+
+                squareButton.setSelected(false);
+                sawtoothButton.setSelected(false);
+            }
+        });
+
+        squareButton.setOnClickListener(view -> {
+            if (audio != null) {
+                audio.waveform = Audio.SQUARE;
+                view.setSelected(true);
+
+                sawtoothButton.setSelected(false);
+                sineButton.setSelected(false);
+            }
+        });
+
+        sawtoothButton.setOnClickListener(view -> {
+            if (audio != null) {
+                audio.waveform = Audio.SAWTOOTH;
+                view.setSelected(true);
+
+                squareButton.setSelected(false);
+                sineButton.setSelected(false);
+            }
+        });
+
+        playButton.setOnClickListener(view -> {
+            if (audio != null) {
+                audio.mute = !audio.mute;
+
+                if (audio.mute) {
+                    ((ImageButton) view).setImageResource(R.drawable.ic_action_play);
+                } else {
+                    ((ImageButton) view).setImageResource(R.drawable.ic_action_pause);
+                }
+            }
+        });
+    }
+
+    private void initDefaultUi() {
+        audio = new Audio();
+        audio.start();
+
 
         if (knob != null) {
             knob.setOnKnobChangeListener(this);
             knob.setValue(400);
         }
 
-        if (fine != null) {
-            fine.setOnSeekBarChangeListener(this);
+        if (fineAdjust != null) {
+            fineAdjust.setOnSeekBarChangeListener(this);
 
-            fine.setMax(MAX_FINE);
-            fine.setProgress(MAX_FINE / 2);
+            fineAdjust.setMax(MAX_FINE);
+            fineAdjust.setProgress(MAX_FINE / 2);
         }
 
-        if (level != null) {
-            level.setOnSeekBarChangeListener(this);
+        if (volumeAdjust != null) {
+            volumeAdjust.setOnSeekBarChangeListener(this);
 
-            level.setMax(MAX_LEVEL);
-            level.setProgress(MAX_LEVEL / 10);
-        }
-
-        view = findViewById(R.id.sine);
-        if (view != null) {
-            view.setOnClickListener(this);
-        }
-
-        view = findViewById(R.id.square);
-        if (view != null) {
-            view.setOnClickListener(this);
-        }
-
-        view = findViewById(R.id.sawtooth);
-        if (view != null) {
-            view.setOnClickListener(this);
-        }
-
-        view = findViewById(R.id.mute);
-        if (view != null) {
-            view.setOnClickListener(this);
+            volumeAdjust.setMax(MAX_LEVEL);
+            volumeAdjust.setProgress(MAX_LEVEL / 10);
         }
     }
 
-    private void setupPhoneStateListener() {
+    private void setPhoneStateListener() {
         // TODO: Change to TelephonyCallback instead. See: https://developer.android.com/reference/android/telephony/TelephonyCallback
         phoneListener = new PhoneStateListener() {
             public void onCallStateChanged(int state, String incomingNumber) {
                 if (state != TelephonyManager.CALL_STATE_IDLE) {
                     if (!audio.mute) {
-                        View v = findViewById(R.id.mute);
-                        if (v != null) {
-                            onClick(v);
-                        }
+                        View view = findViewById(R.id.play);
+                        view.performClick();
                     }
                 }
             }

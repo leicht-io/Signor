@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/padding_top_bottom"
-    android:paddingBottom="@dimen/padding_top_bottom"
-    android:paddingLeft="@dimen/padding_left_right"
-    android:paddingRight="@dimen/padding_left_right"
     android:background="@color/background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/padding_left_right"
+    android:paddingTop="@dimen/padding_top_bottom"
+    android:paddingRight="@dimen/padding_left_right"
+    android:paddingBottom="@dimen/padding_top_bottom">
 
     <RelativeLayout
         android:id="@+id/knobcontainer"
@@ -17,130 +18,141 @@
         android:orientation="vertical">
 
         <leicht.io.signor.Knob
-            android:layout_centerInParent="true"
             android:id="@+id/knob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_centerHorizontal="true"
             app:BackgroundColour="?android:attr/colorBackground"
             app:TextColour="?android:attr/textColorPrimary" />
 
         <LinearLayout
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:orientation="vertical">
 
             <TextView
-                android:clickable="false"
-                android:id="@+id/frequency"
+                android:id="@+id/frequencyDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/frequency_placeholder"
+                android:clickable="false"
                 android:gravity="center"
+                android:text="@string/frequency_placeholder"
                 android:textAlignment="center"
                 android:textColor="@color/primary_text_color"
                 android:textSize="@dimen/primary_text_size" />
 
             <TextView
-                android:clickable="false"
-                android:id="@+id/volume"
+                android:id="@+id/volumeDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/volume_placeholder"
+                android:clickable="false"
                 android:gravity="center"
+                android:text="@string/volume_placeholder"
                 android:textColor="@color/primary_text_color"
                 android:textSize="@dimen/secondary_text_size" />
         </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_marginTop="56dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/knobcontainer"
+        android:layout_marginTop="@dimen/seekbar_container_margin_top"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/seekbar_text_margin_bottom"
             android:text="@string/fine_adjust"
             android:textColor="@color/white" />
 
         <SeekBar
-            android:id="@+id/fine"
+            android:id="@+id/fineAdjust"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="@dimen/seekbar_margin_bottom" />
 
         <TextView
-            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/seekbar_text_margin_top"
+            android:layout_marginBottom="@dimen/seekbar_text_margin_bottom"
             android:text="@string/volume"
             android:textColor="@color/white" />
 
         <SeekBar
-            android:id="@+id/level"
+            android:id="@+id/volumeAdjust"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="@dimen/seekbar_margin_bottom" />
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true">
+
         <ImageButton
-            android:id="@+id/mute"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginEnd="16dp"
+            android:id="@+id/play"
+            android:layout_width="@dimen/play_button_width"
+            android:layout_height="@dimen/play_button_height"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/play_button_margin"
+            android:adjustViewBounds="true"
             android:background="@drawable/button_rounded_corner"
             android:contentDescription="@string/play_pause"
-            android:adjustViewBounds="true"
-            android:padding="24dp"
-            android:src="@drawable/ic_action_play"
-            android:scaleType="fitCenter" />
+            android:padding="@dimen/play_button_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_action_play" />
 
         <LinearLayout
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/mute"
+            android:layout_marginStart="@dimen/button_group_margin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/play">
+
             <ImageButton
-                android:src="@drawable/ic_wave_sine"
                 android:id="@+id/sine"
-                android:layout_width="@dimen/wave_type_size"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/wave_type_size"
                 android:layout_weight="1.0"
-                style="?android:attr/buttonBarButtonStyle"
-                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                android:text="@string/sin" />
+                android:background="@drawable/image_button_states"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_wave_sine"
+                android:text="@string/sin"
+                tools:ignore="ContentDescription" />
 
             <ImageButton
-                android:src="@drawable/ic_wave_square"
                 android:id="@+id/square"
-                android:layout_width="@dimen/wave_type_size"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/wave_type_size"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_weight="1.0"
-                style="?android:attr/buttonBarButtonStyle"
-                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                android:text="@string/squ" />
+                android:background="@drawable/image_button_states"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_wave_square"
+                android:text="@string/squ"
+                tools:ignore="ContentDescription" />
 
             <ImageButton
-                android:src="@drawable/ic_wave_sawtooth"
                 android:id="@+id/sawtooth"
-                android:layout_width="@dimen/wave_type_size"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/wave_type_size"
                 android:layout_weight="1.0"
-                style="?android:attr/buttonBarButtonStyle"
-                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                android:text="@string/saw" />
+                android:background="@drawable/image_button_states"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_wave_sawtooth"
+                android:text="@string/saw"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
