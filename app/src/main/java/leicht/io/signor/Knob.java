@@ -16,7 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-public class Knob extends View implements View.OnClickListener, GestureDetector.OnGestureListener, ValueAnimator.AnimatorUpdateListener {
+public class Knob extends View implements View.OnClickListener, GestureDetector.OnGestureListener{
     private static final int MARGIN = 8;
 
     private static final float MIN = -400;
@@ -227,31 +227,28 @@ public class Knob extends View implements View.OnClickListener, GestureDetector.
     public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
         ValueAnimator animator = ValueAnimator.ofFloat(value, calculateNewFling(event1, event2, velocityX, velocityY));
         animator.setInterpolator(new DecelerateInterpolator());
-        animator.addUpdateListener(this);
+        animator.addUpdateListener(animation -> {
+            value = (Float) animation.getAnimatedValue();
+
+            if (value < MIN) {
+                animation.cancel();
+                value = MIN;
+            }
+
+            if (value > MAX) {
+                animation.cancel();
+                value = MAX;
+            }
+
+            if (listener != null) {
+                listener.onKnobChange(this, value);
+            }
+
+            invalidate();
+        });
         animator.start();
 
         return true;
-    }
-
-    @Override
-    public void onAnimationUpdate(ValueAnimator animation) {
-        value = (Float) animation.getAnimatedValue();
-
-        if (value < MIN) {
-            animation.cancel();
-            value = MIN;
-        }
-
-        if (value > MAX) {
-            animation.cancel();
-            value = MAX;
-        }
-
-        if (listener != null) {
-            listener.onKnobChange(this, value);
-        }
-
-        invalidate();
     }
 
     protected void setOnKnobChangeListener(OnKnobChangeListener listener) {

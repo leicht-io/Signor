@@ -1,6 +1,5 @@
 package leicht.io.signor;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-public class Main extends Activity implements OnKnobChangeListener, SeekBar.OnSeekBarChangeListener, ValueAnimator.AnimatorUpdateListener {
+public class Main extends Activity {
     private static final int MAX_LEVEL = 100;
     private static final int MAX_FINE = 1000;
 
@@ -129,71 +128,6 @@ public class Main extends Activity implements OnKnobChangeListener, SeekBar.OnSe
         }
     }
 
-    @Override
-    public void onKnobChange(Knob knob, float value) {
-        double frequency = Math.pow(10.0, value / 200.0) * 10.0;
-        double adjust = ((fineAdjust.getProgress() - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 100.0;
-
-        frequency += frequency * adjust;
-
-        if (frequencyDisplay != null) {
-            frequencyDisplay.setText(String.format("%sHz", decimalFormat.format(frequency)));
-        }
-
-        if (audio != null) {
-            audio.frequency = frequency;
-        }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        int id = seekBar.getId();
-
-        if (audio == null) {
-            return;
-        }
-
-        switch (id) {
-            case R.id.fineAdjust: {
-                double frequency = Math.pow(10.0, knob.getValue() / 200.0) * 10.0;
-                double adjust = ((progress - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 50.0;
-
-                frequency += frequency * adjust;
-
-                if (frequencyDisplay != null) {
-                    frequencyDisplay.setText(String.format("%sHz", decimalFormat.format(frequency)));
-                }
-
-                if (audio != null) {
-                    audio.frequency = frequency;
-                }
-            }
-            break;
-            case R.id.volumeAdjust:
-                if (volumeDisplay != null) {
-                    double level = Math.log10(progress / (double) MAX_LEVEL) * 20.0;
-
-                    if (level < -80.0)
-                        level = -80.0;
-
-                    volumeDisplay.setText(String.format("%sdB", decimalFormat.format(level)));
-                }
-
-                if (audio != null)
-                    audio.level = progress / (double) MAX_LEVEL;
-                break;
-        }
-    }
-
-    @Override
-    public void onAnimationUpdate(ValueAnimator animation) {
-        float value = (Float) animation.getAnimatedValue();
-
-        if (knob != null) {
-            knob.setValue(value);
-        }
-    }
-
     private void setOnClickListeners() {
         sineButton.setOnClickListener(view -> {
             if (audio != null) {
@@ -236,6 +170,71 @@ public class Main extends Activity implements OnKnobChangeListener, SeekBar.OnSe
                 }
             }
         });
+
+        if (fineAdjust != null) {
+            fineAdjust.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    double frequency = Math.pow(10.0, knob.getValue() / 200.0) * 10.0;
+                    double adjust = ((progress - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 50.0;
+
+                    frequency += frequency * adjust;
+
+                    if (frequencyDisplay != null) {
+                        frequencyDisplay.setText(String.format("%sHz", decimalFormat.format(frequency)));
+                    }
+
+                    if (audio != null) {
+                        audio.frequency = frequency;
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            fineAdjust.setMax(MAX_FINE);
+            fineAdjust.setProgress(MAX_FINE / 2);
+        }
+
+        if (volumeAdjust != null) {
+            volumeAdjust.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (volumeDisplay != null) {
+                        double level = Math.log10(progress / (double) MAX_LEVEL) * 20.0;
+
+                        if (level < -80.0)
+                            level = -80.0;
+
+                        volumeDisplay.setText(String.format("%sdB", decimalFormat.format(level)));
+                    }
+
+                    if (audio != null)
+                        audio.level = progress / (double) MAX_LEVEL;
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            volumeAdjust.setMax(MAX_LEVEL);
+            volumeAdjust.setProgress(MAX_LEVEL / 10);
+        }
     }
 
     private void initDefaultUi() {
@@ -244,22 +243,22 @@ public class Main extends Activity implements OnKnobChangeListener, SeekBar.OnSe
 
 
         if (knob != null) {
-            knob.setOnKnobChangeListener(this);
+            knob.setOnKnobChangeListener((knob, value) -> {
+                double frequency = Math.pow(10.0, value / 200.0) * 10.0;
+                double adjust = ((fineAdjust.getProgress() - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 100.0;
+
+                frequency += frequency * adjust;
+
+                if (frequencyDisplay != null) {
+                    frequencyDisplay.setText(String.format("%sHz", decimalFormat.format(frequency)));
+                }
+
+                if (audio != null) {
+                    audio.frequency = frequency;
+                }
+            });
+
             knob.setValue(400);
-        }
-
-        if (fineAdjust != null) {
-            fineAdjust.setOnSeekBarChangeListener(this);
-
-            fineAdjust.setMax(MAX_FINE);
-            fineAdjust.setProgress(MAX_FINE / 2);
-        }
-
-        if (volumeAdjust != null) {
-            volumeAdjust.setOnSeekBarChangeListener(this);
-
-            volumeAdjust.setMax(MAX_LEVEL);
-            volumeAdjust.setProgress(MAX_LEVEL / 10);
         }
     }
 
@@ -283,13 +282,5 @@ public class Main extends Activity implements OnKnobChangeListener, SeekBar.OnSe
         } catch (Exception e) {
             // Do nothing
         }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
     }
 }

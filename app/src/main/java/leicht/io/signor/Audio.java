@@ -5,11 +5,12 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 
 public class Audio implements Runnable {
+    // TODO: Add to enum
     protected static final int SINE = 0;
     protected static final int SQUARE = 1;
     protected static final int SAWTOOTH = 2;
-
     protected int waveform;
+
     protected boolean mute = true;
 
     protected double frequency;
