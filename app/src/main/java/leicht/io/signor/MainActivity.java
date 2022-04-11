@@ -11,12 +11,11 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-public class Main extends Activity {
+public class MainActivity extends Activity {
+    // TODO: Add to enum.
     private static final int MAX_LEVEL = 100;
     private static final int MAX_FINE = 1000;
-
     private static final String STATE = "state";
-
     private static final String KNOB = "knob";
     private static final String MUTE = "mute";
     private static final String WAVE = "wave";
@@ -38,13 +37,13 @@ public class Main extends Activity {
     private ImageButton squareButton;
     private ImageButton playButton;
 
-    private PhoneStateListener phoneListener;
+    private PhoneStateListener phoneStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_main);
 
         frequencyDisplay = findViewById(R.id.frequencyDisplay);
         volumeDisplay = findViewById(R.id.volumeDisplay);
@@ -118,7 +117,7 @@ public class Main extends Activity {
 
         try {
             TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-            manager.listen(phoneListener, PhoneStateListener.LISTEN_NONE);
+            manager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
         } catch (Exception e) {
             // Do nothing
         }
@@ -264,7 +263,7 @@ public class Main extends Activity {
 
     private void setPhoneStateListener() {
         // TODO: Change to TelephonyCallback instead. See: https://developer.android.com/reference/android/telephony/TelephonyCallback
-        phoneListener = new PhoneStateListener() {
+        phoneStateListener = new PhoneStateListener() {
             public void onCallStateChanged(int state, String incomingNumber) {
                 if (state != TelephonyManager.CALL_STATE_IDLE) {
                     if (!audio.mute) {
@@ -278,7 +277,7 @@ public class Main extends Activity {
 
         try {
             TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-            manager.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+            manager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         } catch (Exception e) {
             // Do nothing
         }

@@ -126,7 +126,7 @@ public class Knob extends View implements View.OnClickListener, GestureDetector.
         canvas.drawCircle(0, 0, radius - MARGIN, paint);
 
         float x = (float) (Math.sin(value * Math.PI / SCALE) * radius * 0.8);
-        float y = (float) (-Math.cos(value * Math.PI / SCALE) * radius * 0.8);
+        float y = (float) (-Math.cos(value * Math.PI / SCALE) * radius * 0.8) ;
 
         paint.setShader(dimple);
         matrix.setTranslate(x, y);
