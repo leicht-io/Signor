@@ -2,8 +2,6 @@ package leicht.io.signor;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -16,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-public class Knob extends View implements View.OnClickListener, GestureDetector.OnGestureListener{
+public class Knob extends View implements View.OnClickListener, GestureDetector.OnGestureListener {
     private static final int MARGIN = 8;
 
     private static final float MIN = -400;
@@ -29,7 +27,10 @@ public class Knob extends View implements View.OnClickListener, GestureDetector.
 
     private int width;
     private int height;
-    private final int backgroundColour;
+    private final int knobBackgroundColor = Color.parseColor("#f6f6f6");
+    private final int knobGradientColor = Color.parseColor("#b7bdc7");
+    private final int knobDimpleColor1 = Color.parseColor("#b7bfca");
+    private final int knobDimpleColor2 = Color.parseColor("#e3e4ea");
 
     private boolean move;
     private float value;
@@ -45,14 +46,6 @@ public class Knob extends View implements View.OnClickListener, GestureDetector.
 
     public Knob(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        Resources resources = getResources();
-
-        final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Signor, 0, 0);
-        // TODO: Change way to get resources
-        backgroundColour = typedArray.getColor(R.styleable.Signor_BackgroundColour, resources.getColor(android.R.color.white));
-
-        typedArray.recycle();
 
         matrix = new Matrix();
         detector = new GestureDetector(context, this);
@@ -93,8 +86,8 @@ public class Knob extends View implements View.OnClickListener, GestureDetector.
         int dimpleX0 = MARGIN / 2;
         int dimpleY0 = -dimpleX0;
 
-        gradient = new LinearGradient(0, gradientY0, 0, gradientY1, backgroundColour, Color.GRAY, Shader.TileMode.CLAMP);
-        dimple = new LinearGradient(dimpleX0, dimpleY0, dimpleX0, dimpleX0, Color.GRAY, backgroundColour, Shader.TileMode.CLAMP);
+        gradient = new LinearGradient(0, gradientY0, 0, gradientY1, knobBackgroundColor, knobGradientColor, Shader.TileMode.CLAMP);
+        dimple = new LinearGradient(dimpleX0, dimpleY0, dimpleX0, dimpleX0, knobDimpleColor1, knobDimpleColor2, Shader.TileMode.CLAMP);
     }
 
     protected float getValue() {
@@ -122,11 +115,11 @@ public class Knob extends View implements View.OnClickListener, GestureDetector.
         canvas.drawCircle(0, 0, radius, paint);
 
         paint.setShader(null);
-        paint.setColor(Color.LTGRAY);
+        paint.setColor(knobBackgroundColor);
         canvas.drawCircle(0, 0, radius - MARGIN, paint);
 
         float x = (float) (Math.sin(value * Math.PI / SCALE) * radius * 0.8);
-        float y = (float) (-Math.cos(value * Math.PI / SCALE) * radius * 0.8) ;
+        float y = (float) (-Math.cos(value * Math.PI / SCALE) * radius * 0.8);
 
         paint.setShader(dimple);
         matrix.setTranslate(x, y);
