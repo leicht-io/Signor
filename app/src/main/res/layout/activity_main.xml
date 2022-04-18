@@ -105,18 +105,21 @@
             android:adjustViewBounds="true"
             android:background="@drawable/button_rounded_corner"
             android:contentDescription="@string/play_pause"
+            android:elevation="10dp"
             android:padding="@dimen/play_button_padding"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_action_play" />
 
         <LinearLayout
-            android:layout_marginStart="@dimen/button_group_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/button_group_margin"
             android:layout_toEndOf="@id/play">
 
             <ImageButton
+                style="?android:attr/borderlessButtonStyle"
+                android:stateListAnimator="@null"
                 android:id="@+id/sine"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/wave_type_size"
