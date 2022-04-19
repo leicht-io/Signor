@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">Signor</string>
 
-    <string name="frequency">Frequency</string>
-
     <string name="sin">Sin</string>
     <string name="squ">Squ</string>
     <string name="saw">Saw</string>
