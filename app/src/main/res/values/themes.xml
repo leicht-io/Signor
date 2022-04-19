@@ -9,8 +9,8 @@
 
     <style name="Theme.App.Signor" parent="AppBaseTheme">
         <item name="android:windowBackground">@drawable/splash_screen_gradient</item>
-        <item name="colorPrimary">@color/background</item>
-        <item name="colorPrimaryDark">@color/background</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">@color/background</item>
         <item name="android:statusBarColor">@color/background</item>
     </style>

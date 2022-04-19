@@ -70,12 +70,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/seekbar_text_margin_bottom"
                 android:text="@string/fine_adjust"
                 android:textColor="@color/white" />
 
-            <SeekBar
+            <com.google.android.material.slider.Slider
                 android:id="@+id/fineAdjust"
+                app:labelBehavior="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/seekbar_margin_bottom" />
@@ -83,13 +83,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/seekbar_text_margin_top"
-                android:layout_marginBottom="@dimen/seekbar_text_margin_bottom"
                 android:text="@string/volume"
                 android:textColor="@color/white" />
 
-            <SeekBar
+            <com.google.android.material.slider.Slider
                 android:id="@+id/volumeAdjust"
+                app:labelBehavior="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/seekbar_margin_bottom" />
@@ -100,27 +99,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
 
-            <ImageButton
-                android:id="@+id/play"
-                android:layout_width="@dimen/play_button_width"
-                android:layout_height="@dimen/play_button_height"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/play_button_margin"
-                android:adjustViewBounds="true"
-                android:background="@drawable/button_rounded_corner"
-                android:contentDescription="@string/play_pause"
-                android:elevation="10dp"
-                android:padding="@dimen/play_button_padding"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_action_play" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/button_group_margin"
-                android:layout_toEndOf="@id/play">
-
+                android:layout_marginStart="@dimen/button_group_margin">
                 <ImageButton
                     android:id="@+id/sine"
                     style="?android:attr/borderlessButtonStyle"
@@ -165,7 +148,7 @@
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
+        android:id="@+id/play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

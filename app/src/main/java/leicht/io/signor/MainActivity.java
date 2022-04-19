@@ -1,16 +1,16 @@
 package leicht.io.signor;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
+
+import com.google.android.material.slider.Slider;
 
 import java.text.DecimalFormat;
 
@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView frequencyDisplay;
     private TextView volumeDisplay;
 
-    private SeekBar volumeAdjust;
-    private SeekBar fineAdjust;
+    private Slider volumeAdjust;
+    private Slider fineAdjust;
 
     private ImageButton sineButton;
     private ImageButton sawtoothButton;
@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
             playButton.performClick();
         }
 
-        fineAdjust.setProgress(bundle.getInt(FINE, MAX_FINE / 2));
-        volumeAdjust.setProgress(bundle.getInt(LEVEL, MAX_LEVEL / 10));
+        fineAdjust.setValue(bundle.getFloat(FINE, MAX_FINE / 2));
+        volumeAdjust.setValue(bundle.getFloat(LEVEL, MAX_LEVEL / 10));
     }
 
     @Override
@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
         bundle.putFloat(KNOB, knob.getValue());
         bundle.putInt(WAVE, audio.waveform);
         bundle.putBoolean(MUTE, audio.mute);
-        bundle.putInt(FINE, fineAdjust.getProgress());
-        bundle.putInt(LEVEL, volumeAdjust.getProgress());
+        bundle.putFloat(FINE, fineAdjust.getValue());
+        bundle.putFloat(LEVEL, volumeAdjust.getValue());
         outState.putBundle(STATE, bundle);
     }
 
@@ -175,68 +175,43 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (fineAdjust != null) {
-            fineAdjust.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    double frequency = Math.pow(10.0, knob.getValue() / 200.0) * 10.0;
-                    double adjust = ((progress - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 50.0;
+            fineAdjust.addOnChangeListener((slider, value, fromUser) -> {
+                double frequency = Math.pow(10.0, knob.getValue() / 200.0) * 10.0;
+                double adjust = ((value - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 50.0;
 
-                    frequency += frequency * adjust;
+                frequency += frequency * adjust;
 
-                    if (frequencyDisplay != null) {
-                        frequencyDisplay.setText(String.format("%sHz", decimalFormat.format(frequency)));
-                    }
-
-                    if (audio != null) {
-                        audio.frequency = frequency;
-                    }
+                if (frequencyDisplay != null) {
+                    frequencyDisplay.setText(String.format("%sHz", decimalFormat.format(frequency)));
                 }
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
+                if (audio != null) {
+                    audio.frequency = frequency;
                 }
             });
 
-            fineAdjust.setMax(MAX_FINE);
-            fineAdjust.setProgress(MAX_FINE / 2);
+            fineAdjust.setValueTo(MAX_FINE);
+            fineAdjust.setValue(MAX_FINE / 2);
         }
 
         if (volumeAdjust != null) {
-            volumeAdjust.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (volumeDisplay != null) {
-                        double level = Math.log10(progress / (double) MAX_LEVEL) * 20.0;
+            volumeAdjust.addOnChangeListener((slider, value, fromUser) -> {
+                if (volumeDisplay != null) {
+                    double level = Math.log10(value / (double) MAX_LEVEL) * 20.0;
 
-                        if (level < -80.0)
-                            level = -80.0;
+                    if (level < -80.0)
+                        level = -80.0;
 
-                        volumeDisplay.setText(String.format("%sdB", decimalFormat.format(level)));
-                    }
-
-                    if (audio != null)
-                        audio.level = progress / (double) MAX_LEVEL;
+                    volumeDisplay.setText(String.format("%sdB", decimalFormat.format(level)));
                 }
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
+                if (audio != null) {
+                    audio.level = value / (double) MAX_LEVEL;
                 }
             });
 
-            volumeAdjust.setMax(MAX_LEVEL);
-            volumeAdjust.setProgress(MAX_LEVEL / 10);
+            volumeAdjust.setValueTo(MAX_LEVEL);
+            volumeAdjust.setValue(MAX_LEVEL / 10);
         }
     }
 
@@ -248,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         if (knob != null) {
             knob.setOnKnobChangeListener((knob, value) -> {
                 double frequency = Math.pow(10.0, value / 200.0) * 10.0;
-                double adjust = ((fineAdjust.getProgress() - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 100.0;
+                double adjust = ((fineAdjust.getValue() - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 100.0;
 
                 frequency += frequency * adjust;
 
