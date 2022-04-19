@@ -13,6 +13,8 @@ import androidx.core.splashscreen.SplashScreen;
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.color.DynamicColors;
+import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.slider.Slider;
@@ -51,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
+        // DynamicColors.applyIfAvailable(this);
+        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.background));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
