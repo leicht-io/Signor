@@ -1,15 +1,19 @@
 package leicht.io.signor;
 
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.slider.Slider;
 
 import java.text.DecimalFormat;
@@ -35,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private Slider volumeAdjust;
     private Slider fineAdjust;
 
-    private ImageButton sineButton;
-    private ImageButton sawtoothButton;
-    private ImageButton squareButton;
-    private ImageButton playButton;
+    private Button sineButton;
+    private Button sawtoothButton;
+    private Button squareButton;
+    private ExtendedFloatingActionButton playButton;
 
     private PhoneStateListener phoneStateListener;
 
@@ -135,30 +139,18 @@ public class MainActivity extends AppCompatActivity {
         sineButton.setOnClickListener(view -> {
             if (audio != null) {
                 audio.waveform = Audio.SINE;
-                view.setSelected(true);
-
-                squareButton.setSelected(false);
-                sawtoothButton.setSelected(false);
             }
         });
 
         squareButton.setOnClickListener(view -> {
             if (audio != null) {
                 audio.waveform = Audio.SQUARE;
-                view.setSelected(true);
-
-                sawtoothButton.setSelected(false);
-                sineButton.setSelected(false);
             }
         });
 
         sawtoothButton.setOnClickListener(view -> {
             if (audio != null) {
                 audio.waveform = Audio.SAWTOOTH;
-                view.setSelected(true);
-
-                squareButton.setSelected(false);
-                sineButton.setSelected(false);
             }
         });
 
@@ -167,9 +159,11 @@ public class MainActivity extends AppCompatActivity {
                 audio.mute = !audio.mute;
 
                 if (audio.mute) {
-                    ((ImageButton) view).setImageResource(R.drawable.ic_action_play);
+                    ((ExtendedFloatingActionButton)view).setText("Start");
+                    ((ExtendedFloatingActionButton) view).setIconResource(R.drawable.ic_action_play);
                 } else {
-                    ((ImageButton) view).setImageResource(R.drawable.ic_action_pause);
+                    ((ExtendedFloatingActionButton)view).setText("Stop");
+                    ((ExtendedFloatingActionButton) view).setIconResource(R.drawable.ic_action_pause);
                 }
             }
         });

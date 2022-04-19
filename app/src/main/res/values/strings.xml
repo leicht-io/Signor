@@ -11,4 +11,8 @@
     <string name="volume_placeholder">0.00dB</string>
     <string name="frequency_placeholder">0.00Hz</string>
     <string name="play_pause">Play/Pause</string>
+    <string name="sine">Sine</string>
+    <string name="square">Square</string>
+    <string name="sawtooth">Sawtooth</string>
+    <string name="start">Start</string>
 </resources>
