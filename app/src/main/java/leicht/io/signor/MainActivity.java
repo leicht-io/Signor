@@ -10,6 +10,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 
 import java.text.DecimalFormat;
 
@@ -43,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        SplashScreen.installSplashScreen(this);
 
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         frequencyDisplay = findViewById(R.id.frequencyDisplay);

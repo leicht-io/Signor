@@ -1,11 +1,18 @@
 <resources>
 
-    <style name="Theme.Signor" parent="AppBaseTheme">
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.App.Signor</item>
+    </style>
+
+    <style name="Theme.App.Signor" parent="AppBaseTheme">
         <item name="android:windowBackground">@drawable/splash_screen_gradient</item>
-        <item name="colorPrimary">@color/background_start</item>
-        <item name="colorPrimaryDark">@color/background_start</item>
-        <item name="colorAccent">@color/background_start</item>
-        <item name="android:statusBarColor">@color/background_start</item>
+        <item name="colorPrimary">@color/background</item>
+        <item name="colorPrimaryDark">@color/background</item>
+        <item name="colorAccent">@color/background</item>
+        <item name="android:statusBarColor">@color/background</item>
     </style>
 
 </resources>

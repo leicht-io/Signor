@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,150 +12,163 @@
     android:paddingBottom="@dimen/padding_top_bottom">
 
     <RelativeLayout
-        android:id="@+id/knobcontainer"
         android:layout_width="match_parent"
-        android:layout_height="242dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <leicht.io.signor.Knob
-            android:id="@+id/knob"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
-            app:BackgroundColour="?android:attr/colorBackground"
-            app:TextColour="?android:attr/textColorPrimary" />
+        <RelativeLayout
+            android:id="@+id/knobcontainer"
+            android:layout_width="match_parent"
+            android:layout_height="242dp"
+            android:orientation="vertical">
+
+            <leicht.io.signor.Knob
+                android:id="@+id/knob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                app:BackgroundColour="?android:attr/colorBackground"
+                app:TextColour="?android:attr/textColorPrimary" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/frequencyDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:gravity="center"
+                    android:text="@string/frequency_placeholder"
+                    android:textAlignment="center"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="@dimen/primary_text_size" />
+
+                <TextView
+                    android:id="@+id/volumeDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:gravity="center"
+                    android:text="@string/volume_placeholder"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="@dimen/secondary_text_size" />
+            </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_below="@id/knobcontainer"
+            android:layout_marginTop="@dimen/seekbar_container_margin_top"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/frequencyDisplay"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clickable="false"
-                android:gravity="center"
-                android:text="@string/frequency_placeholder"
-                android:textAlignment="center"
-                android:textColor="@color/primary_text_color"
-                android:textSize="@dimen/primary_text_size" />
-
-            <TextView
-                android:id="@+id/volumeDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="false"
-                android:gravity="center"
-                android:text="@string/volume_placeholder"
-                android:textColor="@color/primary_text_color"
-                android:textSize="@dimen/secondary_text_size" />
+                android:layout_marginBottom="@dimen/seekbar_text_margin_bottom"
+                android:text="@string/fine_adjust"
+                android:textColor="@color/white" />
+
+            <SeekBar
+                android:id="@+id/fineAdjust"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/seekbar_margin_bottom" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/seekbar_text_margin_top"
+                android:layout_marginBottom="@dimen/seekbar_text_margin_bottom"
+                android:text="@string/volume"
+                android:textColor="@color/white" />
+
+            <SeekBar
+                android:id="@+id/volumeAdjust"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/seekbar_margin_bottom" />
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <ImageButton
+                android:id="@+id/play"
+                android:layout_width="@dimen/play_button_width"
+                android:layout_height="@dimen/play_button_height"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/play_button_margin"
+                android:adjustViewBounds="true"
+                android:background="@drawable/button_rounded_corner"
+                android:contentDescription="@string/play_pause"
+                android:elevation="10dp"
+                android:padding="@dimen/play_button_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_action_play" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/button_group_margin"
+                android:layout_toEndOf="@id/play">
+
+                <ImageButton
+                    android:id="@+id/sine"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/wave_type_size"
+                    android:layout_weight="1.0"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/image_button_states"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_wave_sine"
+                    android:stateListAnimator="@null"
+                    android:text="@string/sin"
+                    tools:ignore="ContentDescription" />
+
+                <ImageButton
+                    android:id="@+id/square"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/wave_type_size"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1.0"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/image_button_states"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_wave_square"
+                    android:text="@string/squ"
+                    tools:ignore="ContentDescription" />
+
+                <ImageButton
+                    android:id="@+id/sawtooth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/wave_type_size"
+                    android:layout_weight="1.0"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/image_button_states"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_wave_sawtooth"
+                    android:text="@string/saw"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
+        </RelativeLayout>
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/knobcontainer"
-        android:layout_marginTop="@dimen/seekbar_container_margin_top"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/seekbar_text_margin_bottom"
-            android:text="@string/fine_adjust"
-            android:textColor="@color/white" />
-
-        <SeekBar
-            android:id="@+id/fineAdjust"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/seekbar_margin_bottom" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/seekbar_text_margin_top"
-            android:layout_marginBottom="@dimen/seekbar_text_margin_bottom"
-            android:text="@string/volume"
-            android:textColor="@color/white" />
-
-        <SeekBar
-            android:id="@+id/volumeAdjust"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/seekbar_margin_bottom" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
-        <ImageButton
-            android:id="@+id/play"
-            android:layout_width="@dimen/play_button_width"
-            android:layout_height="@dimen/play_button_height"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/play_button_margin"
-            android:adjustViewBounds="true"
-            android:background="@drawable/button_rounded_corner"
-            android:contentDescription="@string/play_pause"
-            android:elevation="10dp"
-            android:padding="@dimen/play_button_padding"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_action_play" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/button_group_margin"
-            android:layout_toEndOf="@id/play">
-
-            <ImageButton
-                style="?android:attr/borderlessButtonStyle"
-                android:stateListAnimator="@null"
-                android:id="@+id/sine"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/wave_type_size"
-                android:layout_weight="1.0"
-                android:adjustViewBounds="true"
-                android:background="@drawable/image_button_states"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_wave_sine"
-                android:text="@string/sin"
-                tools:ignore="ContentDescription" />
-
-            <ImageButton
-                android:id="@+id/square"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/wave_type_size"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_weight="1.0"
-                android:adjustViewBounds="true"
-                android:background="@drawable/image_button_states"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_wave_square"
-                android:text="@string/squ"
-                tools:ignore="ContentDescription" />
-
-            <ImageButton
-                android:id="@+id/sawtooth"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/wave_type_size"
-                android:layout_weight="1.0"
-                android:adjustViewBounds="true"
-                android:background="@drawable/image_button_states"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_wave_sawtooth"
-                android:text="@string/saw"
-                tools:ignore="ContentDescription" />
-        </LinearLayout>
-    </RelativeLayout>
-</RelativeLayout>
+        android:layout_gravity="bottom|end"
+        style="?attr/floatingActionButtonLargeStyle"
+        app:srcCompat="@drawable/ic_action_play" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
