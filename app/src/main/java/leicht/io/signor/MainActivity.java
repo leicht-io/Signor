@@ -1,19 +1,19 @@
 package leicht.io.signor;
 
-import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.slider.Slider;
 
 import java.text.DecimalFormat;
@@ -39,10 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private Slider volumeAdjust;
     private Slider fineAdjust;
 
-    private Button sineButton;
-    private Button sawtoothButton;
-    private Button squareButton;
     private ExtendedFloatingActionButton playButton;
+    private BottomNavigationView bottomNavigationView;
 
     private PhoneStateListener phoneStateListener;
 
@@ -60,11 +58,8 @@ public class MainActivity extends AppCompatActivity {
         fineAdjust = findViewById(R.id.fineAdjust);
         volumeAdjust = findViewById(R.id.volumeAdjust);
 
-        sineButton = findViewById(R.id.sine);
-        sineButton.setSelected(true);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        sawtoothButton = findViewById(R.id.sawtooth);
-        squareButton = findViewById(R.id.square);
         playButton = findViewById(R.id.play);
 
         initDefaultUi();
@@ -86,13 +81,13 @@ public class MainActivity extends AppCompatActivity {
         int waveform = bundle.getInt(WAVE, Audio.SINE);
         switch (waveform) {
             case Audio.SINE:
-                sineButton.performClick();
+                bottomNavigationView.getChildAt(0).performClick();
                 break;
             case Audio.SQUARE:
-                squareButton.performClick();
+                bottomNavigationView.getChildAt(1).performClick();
                 break;
             case Audio.SAWTOOTH:
-                sawtoothButton.performClick();
+                bottomNavigationView.getChildAt(2).performClick();
                 break;
         }
 
@@ -136,22 +131,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setOnClickListeners() {
-        sineButton.setOnClickListener(view -> {
-            if (audio != null) {
-                audio.waveform = Audio.SINE;
+        bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) item -> {
+            switch (item.getItemId()) {
+                case R.id.sine:
+                    if (audio != null) {
+                        audio.waveform = Audio.SINE;
+                    }
+                    break;
+                case R.id.sawtooth:
+                    if (audio != null) {
+                        audio.waveform = Audio.SAWTOOTH;
+                    }
+                    break;
+                case R.id.square:
+                    if (audio != null) {
+                        audio.waveform = Audio.SQUARE;
+                    }
+                    break;
             }
-        });
 
-        squareButton.setOnClickListener(view -> {
-            if (audio != null) {
-                audio.waveform = Audio.SQUARE;
-            }
-        });
-
-        sawtoothButton.setOnClickListener(view -> {
-            if (audio != null) {
-                audio.waveform = Audio.SAWTOOTH;
-            }
+            return true;
         });
 
         playButton.setOnClickListener(view -> {
@@ -159,10 +158,10 @@ public class MainActivity extends AppCompatActivity {
                 audio.mute = !audio.mute;
 
                 if (audio.mute) {
-                    ((ExtendedFloatingActionButton)view).setText("Start");
+                    ((ExtendedFloatingActionButton) view).setText("Start");
                     ((ExtendedFloatingActionButton) view).setIconResource(R.drawable.ic_action_play);
                 } else {
-                    ((ExtendedFloatingActionButton)view).setText("Stop");
+                    ((ExtendedFloatingActionButton) view).setText("Stop");
                     ((ExtendedFloatingActionButton) view).setIconResource(R.drawable.ic_action_pause);
                 }
             }

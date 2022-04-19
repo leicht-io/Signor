@@ -3,16 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_background"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/padding_left_right"
-    android:paddingTop="@dimen/padding_top_bottom"
-    android:paddingRight="@dimen/padding_left_right"
-    android:paddingBottom="@dimen/padding_top_bottom">
+    android:background="@drawable/main_background">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="16dp">
 
         <RelativeLayout
             android:id="@+id/knobcontainer"
@@ -91,44 +87,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 app:labelBehavior="gone" />
-
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:singleSelection="true">
-                <Button
-                    android:id="@+id/sine"
-                    style="@style/Widget.Material3.Button.TonalButton.Icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/sine"
-                    app:icon="@drawable/ic_wave_sine" />
-
-                <Button
-                    android:id="@+id/square"
-                    style="@style/Widget.Material3.Button.TonalButton.Icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/square"
-                    app:icon="@drawable/ic_wave_square" />
-
-                <Button
-                    android:id="@+id/sawtooth"
-                    style="@style/Widget.Material3.Button.TonalButton.Icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/sawtooth"
-                    app:icon="@drawable/ic_wave_sawtooth" />
-            </com.google.android.material.button.MaterialButtonToggleGroup>
         </LinearLayout>
     </RelativeLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/play"
-        android:text="@string/start"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:contentDescription="@string/play_pause"
-        app:icon="@drawable/ic_action_play" />
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/play_pause"
+            android:text="@string/start"
+            app:icon="@drawable/ic_action_play" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/bottom_navigation_menu" />
+    </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
