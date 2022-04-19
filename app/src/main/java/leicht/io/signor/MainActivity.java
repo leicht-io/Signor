@@ -3,13 +3,14 @@ package leicht.io.signor;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     private PhoneStateListener phoneStateListener;
+
+    private AnimatedVectorDrawableCompat mPlayToPauseAnim;
+    private AnimatedVectorDrawableCompat mPauseToPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,11 +162,15 @@ public class MainActivity extends AppCompatActivity {
                 audio.mute = !audio.mute;
 
                 if (audio.mute) {
-                    ((ExtendedFloatingActionButton) view).setText("Start");
-                    ((ExtendedFloatingActionButton) view).setIconResource(R.drawable.ic_action_play);
+                    ((ExtendedFloatingActionButton) view).setText(R.string.start);
+                    ((ExtendedFloatingActionButton) view).setIcon(mPauseToPlay);
+
+                    mPauseToPlay.start();
                 } else {
-                    ((ExtendedFloatingActionButton) view).setText("Stop");
-                    ((ExtendedFloatingActionButton) view).setIconResource(R.drawable.ic_action_pause);
+                    ((ExtendedFloatingActionButton) view).setText(R.string.stop);
+                    ((ExtendedFloatingActionButton) view).setIcon(mPlayToPauseAnim);
+
+                    mPlayToPauseAnim.start();
                 }
             }
         });
@@ -209,9 +217,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initDefaultUi() {
+        mPlayToPauseAnim = AnimatedVectorDrawableCompat.create(this, R.drawable.play_to_pause);
+        mPauseToPlay = AnimatedVectorDrawableCompat.create(this, R.drawable.pause_to_play);
+
         audio = new Audio();
         audio.start();
-
 
         if (knob != null) {
             knob.setOnKnobChangeListener((knob, value) -> {

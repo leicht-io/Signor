@@ -103,7 +103,7 @@
             android:layout_margin="16dp"
             android:contentDescription="@string/play_pause"
             android:text="@string/start"
-            app:icon="@drawable/ic_action_play" />
+            app:icon="@drawable/play_to_pause"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"

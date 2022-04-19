@@ -15,4 +15,5 @@
     <string name="square">Square</string>
     <string name="sawtooth">Sawtooth</string>
     <string name="start">Start</string>
+    <string name="stop">Stop</string>
 </resources>
