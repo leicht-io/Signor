@@ -9,9 +9,11 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.text.DecimalFormat;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     // TODO: Add to enum.
     private static final int MAX_LEVEL = 100;
     private static final int MAX_FINE = 1000;
