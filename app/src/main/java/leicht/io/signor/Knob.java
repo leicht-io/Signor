@@ -27,10 +27,10 @@ public class Knob extends View implements View.OnClickListener, GestureDetector.
 
     private int width;
     private int height;
-    private final int knobBackgroundColor = Color.parseColor("#f6f6f6");
-    private final int knobGradientColor = Color.parseColor("#b7bdc7");
-    private final int knobDimpleColor1 = Color.parseColor("#b7bfca");
-    private final int knobDimpleColor2 = Color.parseColor("#e3e4ea");
+    private final int knobBackgroundColor = Color.parseColor(getContext().getString(R.string.knobBackgroundColor));
+    private final int knobGradientColor = Color.parseColor(getContext().getString(R.string.knobGradientColor));
+    private final int knobDimpleColor1 = Color.parseColor(getContext().getString(R.string.knobDimple1Color));
+    private final int knobDimpleColor2 = Color.parseColor(getContext().getString(R.string.knobDimple2Color));
 
     private boolean move;
     private float value;
@@ -144,8 +144,8 @@ public class Knob extends View implements View.OnClickListener, GestureDetector.
             detector.onTouchEvent(event);
         }
 
-        float x = event.getX() - width / 2;
-        float y = event.getY() - height / 2;
+        float x = event.getX() - width / 2f;
+        float y = event.getY() - height / 2f;
 
         float theta = (float) Math.atan2(x, -y);
 
@@ -194,10 +194,10 @@ public class Knob extends View implements View.OnClickListener, GestureDetector.
     }
 
     private float calculateNewFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-        float x1 = event1.getX() - width / 2;
-        float y1 = event1.getY() - height / 2;
-        float x2 = event2.getX() - width / 2;
-        float y2 = event2.getY() - height / 2;
+        float x1 = event1.getX() - width / 2f;
+        float y1 = event1.getY() - height / 2f;
+        float x2 = event2.getX() - width / 2f;
+        float y2 = event2.getY() - height / 2f;
 
         float theta1 = (float) Math.atan2(x1, -y1);
         float theta2 = (float) Math.atan2(x2, -y2);

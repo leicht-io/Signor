@@ -1,19 +1,21 @@
 package leicht.io.signor;
 
+import static leicht.io.signor.utils.CalculateNewFrequencyKt.calculateNewFrequency;
+import static leicht.io.signor.utils.CalculateNewLevelKt.calculateNewLevel;
+
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.color.DynamicColors;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -23,8 +25,8 @@ import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
     // TODO: Add to enum.
-    private static final int MAX_LEVEL = 100;
-    private static final int MAX_FINE = 1000;
+    public static final int MAX_LEVEL = 100;
+    public static final int MAX_FINE = 1000;
     private static final String STATE = "state";
     private static final String KNOB = "knob";
     private static final String MUTE = "mute";
@@ -53,23 +55,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
-        // DynamicColors.applyIfAvailable(this);
+
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
-        getWindow().setStatusBarColor(getResources().getColor(R.color.background));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.background));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        frequencyDisplay = findViewById(R.id.frequencyDisplay);
-        volumeDisplay = findViewById(R.id.volumeDisplay);
-
-        knob = findViewById(R.id.knob);
-        fineAdjust = findViewById(R.id.fineAdjust);
-        volumeAdjust = findViewById(R.id.volumeAdjust);
-
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        playButton = findViewById(R.id.play);
 
         initDefaultUi();
         setPhoneStateListener();
@@ -105,12 +96,12 @@ public class MainActivity extends AppCompatActivity {
             playButton.performClick();
         }
 
-        fineAdjust.setValue(bundle.getFloat(FINE, MAX_FINE / 2));
-        volumeAdjust.setValue(bundle.getFloat(LEVEL, MAX_LEVEL / 10));
+        fineAdjust.setValue(bundle.getFloat(FINE, MAX_FINE / 2f));
+        volumeAdjust.setValue(bundle.getFloat(LEVEL, MAX_LEVEL / 10f));
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         Bundle bundle = new Bundle();
@@ -182,10 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (fineAdjust != null) {
             fineAdjust.addOnChangeListener((slider, value, fromUser) -> {
-                double frequency = Math.pow(10.0, knob.getValue() / 200.0) * 10.0;
-                double adjust = ((value - (double) (MAX_FINE / 2)) / (double) MAX_FINE) / 50.0;
-
-                frequency += frequency * adjust;
+                double frequency = calculateNewFrequency(value, knob.getValue());
 
                 if (frequencyDisplay != null) {
                     frequencyDisplay.setText(String.format("%sHz", decimalFormat.format(frequency)));
@@ -197,16 +185,13 @@ public class MainActivity extends AppCompatActivity {
             });
 
             fineAdjust.setValueTo(MAX_FINE);
-            fineAdjust.setValue(MAX_FINE / 2);
+            fineAdjust.setValue(MAX_FINE / 2f);
         }
 
         if (volumeAdjust != null) {
             volumeAdjust.addOnChangeListener((slider, value, fromUser) -> {
                 if (volumeDisplay != null) {
-                    double level = Math.log10(value / (double) MAX_LEVEL) * 20.0;
-
-                    if (level < -80.0)
-                        level = -80.0;
+                    double level = calculateNewLevel(value);
 
                     volumeDisplay.setText(String.format("%sdB", decimalFormat.format(level)));
                 }
@@ -217,11 +202,20 @@ public class MainActivity extends AppCompatActivity {
             });
 
             volumeAdjust.setValueTo(MAX_LEVEL);
-            volumeAdjust.setValue(MAX_LEVEL / 10);
+            volumeAdjust.setValue(MAX_LEVEL / 10f);
         }
     }
 
     private void initDefaultUi() {
+        frequencyDisplay = findViewById(R.id.frequencyDisplay);
+        volumeDisplay = findViewById(R.id.volumeDisplay);
+        knob = findViewById(R.id.knob);
+        fineAdjust = findViewById(R.id.fineAdjust);
+        volumeAdjust = findViewById(R.id.volumeAdjust);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        playButton = findViewById(R.id.play);
+
+
         mPlayToPauseAnim = AnimatedVectorDrawableCompat.create(this, R.drawable.play_to_pause);
         mPauseToPlay = AnimatedVectorDrawableCompat.create(this, R.drawable.pause_to_play);
 
@@ -249,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setPhoneStateListener() {
-        // TODO: Change to TelephonyCallback instead. See: https://developer.android.com/reference/android/telephony/TelephonyCallback
         phoneStateListener = new PhoneStateListener() {
             public void onCallStateChanged(int state, String incomingNumber) {
                 if (state != TelephonyManager.CALL_STATE_IDLE) {

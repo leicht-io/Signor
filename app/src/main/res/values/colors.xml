@@ -60,4 +60,8 @@
     <color name="md_theme_dark_inversePrimary">#2A5EA7</color>
     <color name="md_theme_dark_shadow">#000000</color>
     <color name="md_theme_dark_primaryInverse">#2A5EA7</color>
+    <string name="knobBackgroundColor">#f6f6f6</string>
+    <string name="knobGradientColor">#b7bdc7</string>
+    <string name="knobDimple1Color">#b7bfca</string>
+    <string name="knobDimple2Color">#e3e4ea</string>
 </resources>
