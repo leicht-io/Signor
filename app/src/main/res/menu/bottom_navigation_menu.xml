@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sine"
+        android:enabled="true"
+        android:icon="@drawable/ic_wave_sine"
+        android:title="@string/sine"/>
+    <item
+        android:id="@+id/square"
+        android:enabled="true"
+        android:icon="@drawable/ic_wave_square"
+        android:title="@string/square"/>
+    <item
+        android:id="@+id/sawtooth"
+        android:enabled="true"
+        android:icon="@drawable/ic_wave_sawtooth"
+        android:title="@string/sawtooth"/>
+</menu>

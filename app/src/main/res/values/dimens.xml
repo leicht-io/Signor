@@ -1,9 +1,16 @@
 <resources>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding_top_bottom">56dp</dimen>
     <dimen name="padding_left_right">32dp</dimen>
-    <dimen name="primary_text_size">24sp</dimen>
-    <dimen name="secondary_text_size">18sp</dimen>
+    <dimen name="primary_text_size">22sp</dimen>
+    <dimen name="secondary_text_size">16sp</dimen>
     <dimen name="wave_type_size">48dp</dimen>
+    <dimen name="button_group_margin">32dp</dimen>
+    <dimen name="play_button_width">75dp</dimen>
+    <dimen name="play_button_height">75dp</dimen>
+    <dimen name="play_button_margin">16dp</dimen>
+    <dimen name="play_button_padding">24dp</dimen>
+    <dimen name="seekbar_margin_bottom">8dp</dimen>
+    <dimen name="seekbar_text_margin_top">16dp</dimen>
+    <dimen name="seekbar_container_margin_top">36dp</dimen>
+    <dimen name="seekbar_text_margin_bottom">4dp</dimen>
 </resources>

@@ -2,8 +2,6 @@ package leicht.io.signor;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -16,10 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-// Knob
-public class Knob extends View
-        implements View.OnClickListener, GestureDetector.OnGestureListener,
-        ValueAnimator.AnimatorUpdateListener {
+public class Knob extends View implements View.OnClickListener, GestureDetector.OnGestureListener {
     private static final int MARGIN = 8;
 
     private static final float MIN = -400;
@@ -32,7 +27,10 @@ public class Knob extends View
 
     private int width;
     private int height;
-    private final int backgroundColour;
+    private final int knobBackgroundColor = Color.parseColor(getContext().getString(R.string.knobBackgroundColor));
+    private final int knobGradientColor = Color.parseColor(getContext().getString(R.string.knobGradientColor));
+    private final int knobDimpleColor1 = Color.parseColor(getContext().getString(R.string.knobDimple1Color));
+    private final int knobDimpleColor2 = Color.parseColor(getContext().getString(R.string.knobDimple2Color));
 
     private boolean move;
     private float value;
@@ -48,14 +46,6 @@ public class Knob extends View
 
     public Knob(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        Resources resources = getResources();
-
-        final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Signor, 0, 0);
-        // TODO: Change way to get resources
-        backgroundColour = typedArray.getColor(R.styleable.Signor_BackgroundColour, resources.getColor(android.R.color.white));
-
-        typedArray.recycle();
 
         matrix = new Matrix();
         detector = new GestureDetector(context, this);
@@ -96,8 +86,8 @@ public class Knob extends View
         int dimpleX0 = MARGIN / 2;
         int dimpleY0 = -dimpleX0;
 
-        gradient = new LinearGradient(0, gradientY0, 0, gradientY1, backgroundColour, Color.GRAY, Shader.TileMode.CLAMP);
-        dimple = new LinearGradient(dimpleX0, dimpleY0, dimpleX0, dimpleX0, Color.GRAY, backgroundColour, Shader.TileMode.CLAMP);
+        gradient = new LinearGradient(0, gradientY0, 0, gradientY1, knobBackgroundColor, knobGradientColor, Shader.TileMode.CLAMP);
+        dimple = new LinearGradient(dimpleX0, dimpleY0, dimpleX0, dimpleX0, knobDimpleColor1, knobDimpleColor2, Shader.TileMode.CLAMP);
     }
 
     protected float getValue() {
@@ -125,7 +115,7 @@ public class Knob extends View
         canvas.drawCircle(0, 0, radius, paint);
 
         paint.setShader(null);
-        paint.setColor(Color.LTGRAY);
+        paint.setColor(knobBackgroundColor);
         canvas.drawCircle(0, 0, radius - MARGIN, paint);
 
         float x = (float) (Math.sin(value * Math.PI / SCALE) * radius * 0.8);
@@ -154,8 +144,8 @@ public class Knob extends View
             detector.onTouchEvent(event);
         }
 
-        float x = event.getX() - width / 2;
-        float y = event.getY() - height / 2;
+        float x = event.getX() - width / 2f;
+        float y = event.getY() - height / 2f;
 
         float theta = (float) Math.atan2(x, -y);
 
@@ -204,10 +194,10 @@ public class Knob extends View
     }
 
     private float calculateNewFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-        float x1 = event1.getX() - width / 2;
-        float y1 = event1.getY() - height / 2;
-        float x2 = event2.getX() - width / 2;
-        float y2 = event2.getY() - height / 2;
+        float x1 = event1.getX() - width / 2f;
+        float y1 = event1.getY() - height / 2f;
+        float x2 = event2.getX() - width / 2f;
+        float y2 = event2.getY() - height / 2f;
 
         float theta1 = (float) Math.atan2(x1, -y1);
         float theta2 = (float) Math.atan2(x2, -y2);
@@ -230,38 +220,34 @@ public class Knob extends View
     public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
         ValueAnimator animator = ValueAnimator.ofFloat(value, calculateNewFling(event1, event2, velocityX, velocityY));
         animator.setInterpolator(new DecelerateInterpolator());
-        animator.addUpdateListener(this);
+        animator.addUpdateListener(animation -> {
+            value = (Float) animation.getAnimatedValue();
+
+            if (value < MIN) {
+                animation.cancel();
+                value = MIN;
+            }
+
+            if (value > MAX) {
+                animation.cancel();
+                value = MAX;
+            }
+
+            if (listener != null) {
+                listener.onKnobChange(this, value);
+            }
+
+            invalidate();
+        });
         animator.start();
 
         return true;
-    }
-
-    @Override
-    public void onAnimationUpdate(ValueAnimator animation) {
-        value = (Float) animation.getAnimatedValue();
-
-        if (value < MIN) {
-            animation.cancel();
-            value = MIN;
-        }
-
-        if (value > MAX) {
-            animation.cancel();
-            value = MAX;
-        }
-
-        if (listener != null) {
-            listener.onKnobChange(this, value);
-        }
-
-        invalidate();
     }
 
     protected void setOnKnobChangeListener(OnKnobChangeListener listener) {
         this.listener = listener;
     }
 
-    // A collection of listener callback methods we don't need.
     @Override
     public void onLongPress(MotionEvent e) {
     }
@@ -283,9 +269,5 @@ public class Knob extends View
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
         return false;
-    }
-
-    public interface OnKnobChangeListener {
-        void onKnobChange(Knob knob, float value);
     }
 }
